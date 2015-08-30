@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		477091151B93827E00EE9164 /* TestUpload.png in Resources */ = {isa = PBXBuildFile; fileRef = 477091141B93827E00EE9164 /* TestUpload.png */; };
 		47FFC2AC1B09287300D3EDFE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FFC2AB1B09287300D3EDFE /* AppDelegate.swift */; };
 		47FFC2AE1B09287300D3EDFE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FFC2AD1B09287300D3EDFE /* ViewController.swift */; };
 		47FFC2B11B09287300D3EDFE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 47FFC2AF1B09287300D3EDFE /* Main.storyboard */; };
 		47FFC2B31B09287300D3EDFE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47FFC2B21B09287300D3EDFE /* Images.xcassets */; };
 		47FFC2B61B09287300D3EDFE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 47FFC2B41B09287300D3EDFE /* LaunchScreen.xib */; };
 		47FFC2F61B0929C100D3EDFE /* RebekkaTouch.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 47FFC2D11B0928C700D3EDFE /* RebekkaTouch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		47FFC2FC1B120CBA00D3EDFE /* testUpload.png in Resources */ = {isa = PBXBuildFile; fileRef = 47FFC2FB1B120CBA00D3EDFE /* testUpload.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +54,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		477091141B93827E00EE9164 /* TestUpload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TestUpload.png; sourceTree = "<group>"; };
 		47FFC2A61B09287300D3EDFE /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47FFC2AA1B09287300D3EDFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		47FFC2AB1B09287300D3EDFE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -62,7 +63,6 @@
 		47FFC2B21B09287300D3EDFE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		47FFC2B51B09287300D3EDFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		47FFC2CB1B0928C700D3EDFE /* Rebekka.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Rebekka.xcodeproj; path = "../rebekka-source/Rebekka.xcodeproj"; sourceTree = "<group>"; };
-		47FFC2FB1B120CBA00D3EDFE /* testUpload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = testUpload.png; path = ../../../../Desktop/testUpload.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,7 +96,7 @@
 		47FFC2A81B09287300D3EDFE /* Demo */ = {
 			isa = PBXGroup;
 			children = (
-				47FFC2FB1B120CBA00D3EDFE /* testUpload.png */,
+				477091141B93827E00EE9164 /* TestUpload.png */,
 				47FFC2AB1B09287300D3EDFE /* AppDelegate.swift */,
 				47FFC2AD1B09287300D3EDFE /* ViewController.swift */,
 				47FFC2AF1B09287300D3EDFE /* Main.storyboard */,
@@ -152,6 +152,8 @@
 		47FFC29E1B09287300D3EDFE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = "Constantine Fry";
 				TargetAttributes = {
@@ -207,8 +209,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				47FFC2B11B09287300D3EDFE /* Main.storyboard in Resources */,
-				47FFC2FC1B120CBA00D3EDFE /* testUpload.png in Resources */,
 				47FFC2B61B09287300D3EDFE /* LaunchScreen.xib in Resources */,
+				477091151B93827E00EE9164 /* TestUpload.png in Resources */,
 				47FFC2B31B09287300D3EDFE /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
