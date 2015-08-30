@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        if let URL = NSBundle.mainBundle().URLForResource("testUpload", withExtension: "png") {
+        if let URL = NSBundle.mainBundle().URLForResource("TestUpload", withExtension: "png") {
             let path = "/Users/fry/ftp/\(NSUUID().UUIDString).png"
             _session.upload(URL, path: path) {
                 (result, error) -> Void in
