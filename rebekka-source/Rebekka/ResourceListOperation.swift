@@ -22,7 +22,7 @@ public enum ResourceType: String {
     case Whiteout           = "Whiteout"           // DT_WHT
 }
 
-public class ResourceItem: Printable {
+public class ResourceItem: CustomStringConvertible {
     public var type: ResourceType = .Unknown
     public var name: String = ""
     public var link: String = ""
@@ -64,9 +64,9 @@ internal class ResourceListOperation: ReadStreamOperation {
         let bytes = UnsafePointer<UInt8>(self.inputData!.bytes)
         let totalBytes = CFIndex(self.inputData!.length)
         var parsedBytes = CFIndex(0)
-        var entity = UnsafeMutablePointer<Unmanaged<CFDictionary>?>.alloc(1)
+        let entity = UnsafeMutablePointer<Unmanaged<CFDictionary>?>.alloc(1)
         resources = [ResourceItem]()
-        do {
+        repeat {
             parsedBytes = CFFTPCreateParsedResourceListing(nil, bytes.advancedBy(offset), totalBytes - offset, entity)
             if parsedBytes > 0 {
                 if let fptResource = entity.memory?.takeUnretainedValue() {
@@ -80,7 +80,7 @@ internal class ResourceListOperation: ReadStreamOperation {
     }
     
     private func mapFTPResources(ftpResources: [String : AnyObject]) -> ResourceItem {
-        var item = ResourceItem()
+        let item = ResourceItem()
         if let mode = ftpResources[kCFFTPResourceMode as String] as? Int32 {
             item.mode = mode
         }

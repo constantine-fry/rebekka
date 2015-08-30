@@ -149,7 +149,7 @@ private class SessionConfigurationStorage {
     private let storageURL: NSURL!
     
     init() {
-        storageURL = NSURL(fileURLWithPath: "")!
+        storageURL = NSURL(fileURLWithPath: "")
     }
     
     /** Returns an array of all stored servers. */

@@ -15,14 +15,15 @@ internal class FileDownloadOperation: ReadStreamOperation {
     var fileURL: NSURL?
     
     override func start() {
-        let filePath = NSTemporaryDirectory().stringByAppendingPathComponent(NSUUID().UUIDString)
+        let filePath = (NSTemporaryDirectory() as NSString).stringByAppendingPathComponent(NSUUID().UUIDString)
         self.fileURL = NSURL(fileURLWithPath: filePath)
-        let written = NSData().writeToURL(self.fileURL!, options: NSDataWritingOptions.DataWritingAtomic, error: &error)
-        self.fileHandle = NSFileHandle(forWritingToURL: self.fileURL!, error: &error)
-        if (self.fileHandle == nil) {
-            self.finishOperation()
-        } else {
+        do {
+            try NSData().writeToURL(self.fileURL!, options: NSDataWritingOptions.DataWritingAtomic)
+            self.fileHandle = try NSFileHandle(forWritingToURL: self.fileURL!)
             self.startOperationWithStream(self.readStream)
+        } catch let error as NSError {
+            self.error = error
+            self.finishOperation()
         }
     }
     
@@ -34,7 +35,10 @@ internal class FileDownloadOperation: ReadStreamOperation {
     override func streamEventError(aStream: NSStream) {
         self.fileHandle?.closeFile()
         if self.fileURL != nil {
-            NSFileManager.defaultManager().removeItemAtURL(self.fileURL!, error: nil)
+            do {
+                try NSFileManager.defaultManager().removeItemAtURL(self.fileURL!)
+            } catch _ {
+            }
         }
         self.fileURL = nil
     }

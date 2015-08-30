@@ -21,11 +21,11 @@ internal class StreamOperation: Operation, NSStreamDelegate {
     }
     
     private func configureStream(stream: NSStream) {
-        stream.setProperty(true, forKey: kCFStreamPropertyShouldCloseNativeSocket as! String)
-        stream.setProperty(true, forKey: kCFStreamPropertyFTPFetchResourceInfo as! String)
-        stream.setProperty(self.configuration.passive, forKey: kCFStreamPropertyFTPUsePassiveMode as! String)
-        stream.setProperty(self.configuration.username, forKey: kCFStreamPropertyFTPUserName as! String)
-        stream.setProperty(self.configuration.password, forKey: kCFStreamPropertyFTPPassword as! String)
+        stream.setProperty(true, forKey: kCFStreamPropertyShouldCloseNativeSocket as String)
+        stream.setProperty(true, forKey: kCFStreamPropertyFTPFetchResourceInfo as String)
+        stream.setProperty(self.configuration.passive, forKey: kCFStreamPropertyFTPUsePassiveMode as String)
+        stream.setProperty(self.configuration.username, forKey: kCFStreamPropertyFTPUserName as String)
+        stream.setProperty(self.configuration.password, forKey: kCFStreamPropertyFTPPassword as String)
         stream.delegate = self
     }
     
@@ -44,7 +44,6 @@ internal class StreamOperation: Operation, NSStreamDelegate {
             return
         }
         
-        var (result, error): (Bool, NSError?)
         switch (eventCode) {
         case NSStreamEvent.OpenCompleted:
             streamEventOpenComleted(aStream)
@@ -59,7 +58,7 @@ internal class StreamOperation: Operation, NSStreamDelegate {
             streamEventEnd(aStream)
             self.finishOperation()
         default:
-            println("Unkonwn NSStreamEvent: \(eventCode)")
+            print("Unkonwn NSStreamEvent: \(eventCode)")
         }
     }
     

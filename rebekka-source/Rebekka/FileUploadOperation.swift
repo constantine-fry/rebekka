@@ -14,11 +14,13 @@ internal class FileUploadOperation: WriteStreamOperation {
     var fileURL: NSURL!
     
     override func start() {
-        self.fileHandle = NSFileHandle(forReadingFromURL: fileURL, error: &error)
-        if (self.fileHandle == nil) {
-            self.finishOperation()
-        } else {
+        do {
+            self.fileHandle = try NSFileHandle(forReadingFromURL: fileURL)
             self.startOperationWithStream(self.writeStream)
+        } catch let error as NSError {
+            self.error = error
+            self.fileHandle = nil
+            self.finishOperation()
         }
     }
     
