@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _session = Session(configuration: configuration)
         _session.list("/") {
             (resources, error) -> Void in
-            println("List directory with result:\n\(resources), error: \(error)\n\n")
+            print("List directory with result:\n\(resources), error: \(error)\n\n")
         }
         /*
         _session.download("/Users/fry/ftp/test.png") {
