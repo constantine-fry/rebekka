@@ -14,12 +14,12 @@
 		47179B891B13541600CAFD6D /* ResourceListOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B881B13541600CAFD6D /* ResourceListOperation.swift */; };
 		47179B8B1B13543B00CAFD6D /* FileDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B8A1B13543B00CAFD6D /* FileDownloadOperation.swift */; };
 		47179B8F1B13549000CAFD6D /* FileUploadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B8E1B13549000CAFD6D /* FileUploadOperation.swift */; };
-		47179B911B1354B200CAFD6D /* DirectoryCreatinOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B901B1354B200CAFD6D /* DirectoryCreatinOperation.swift */; };
+		47179B911B1354B200CAFD6D /* DirectoryCreationOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B901B1354B200CAFD6D /* DirectoryCreationOperation.swift */; };
 		47179B921B1354FB00CAFD6D /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B7F1B1352FD00CAFD6D /* Operation.swift */; };
 		47179B931B1354FB00CAFD6D /* StreamOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B811B13530A00CAFD6D /* StreamOperation.swift */; };
 		47179B941B1354FB00CAFD6D /* WriteStreamOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B851B1353A500CAFD6D /* WriteStreamOperation.swift */; };
 		47179B951B1354FB00CAFD6D /* FileUploadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B8E1B13549000CAFD6D /* FileUploadOperation.swift */; };
-		47179B961B1354FB00CAFD6D /* DirectoryCreatinOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B901B1354B200CAFD6D /* DirectoryCreatinOperation.swift */; };
+		47179B961B1354FB00CAFD6D /* DirectoryCreationOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B901B1354B200CAFD6D /* DirectoryCreationOperation.swift */; };
 		47179B971B1354FB00CAFD6D /* ReadStreamOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B831B13539700CAFD6D /* ReadStreamOperation.swift */; };
 		47179B981B1354FB00CAFD6D /* ResourceListOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B881B13541600CAFD6D /* ResourceListOperation.swift */; };
 		47179B991B1354FB00CAFD6D /* FileDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47179B8A1B13543B00CAFD6D /* FileDownloadOperation.swift */; };
@@ -35,7 +35,7 @@
 		47179B881B13541600CAFD6D /* ResourceListOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceListOperation.swift; sourceTree = "<group>"; };
 		47179B8A1B13543B00CAFD6D /* FileDownloadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDownloadOperation.swift; sourceTree = "<group>"; };
 		47179B8E1B13549000CAFD6D /* FileUploadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUploadOperation.swift; sourceTree = "<group>"; };
-		47179B901B1354B200CAFD6D /* DirectoryCreatinOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryCreatinOperation.swift; sourceTree = "<group>"; };
+		47179B901B1354B200CAFD6D /* DirectoryCreationOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryCreationOperation.swift; sourceTree = "<group>"; };
 		47FFC2661B0926C600D3EDFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		47FFC2831B09279200D3EDFE /* Rebekka.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rebekka.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		47FFC2DC1B09297E00D3EDFE /* RebekkaTouch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RebekkaTouch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,7 +86,7 @@
 			children = (
 				47179B851B1353A500CAFD6D /* WriteStreamOperation.swift */,
 				47179B8E1B13549000CAFD6D /* FileUploadOperation.swift */,
-				47179B901B1354B200CAFD6D /* DirectoryCreatinOperation.swift */,
+				47179B901B1354B200CAFD6D /* DirectoryCreationOperation.swift */,
 			);
 			name = Write;
 			sourceTree = "<group>";
@@ -188,6 +188,8 @@
 		47FFC2591B0926C600D3EDFE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = "Constantine Fry";
 				TargetAttributes = {
@@ -239,7 +241,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				47179B911B1354B200CAFD6D /* DirectoryCreatinOperation.swift in Sources */,
+				47179B911B1354B200CAFD6D /* DirectoryCreationOperation.swift in Sources */,
 				47179B8B1B13543B00CAFD6D /* FileDownloadOperation.swift in Sources */,
 				47FFC2F81B092A3800D3EDFE /* Session.swift in Sources */,
 				47179B8F1B13549000CAFD6D /* FileUploadOperation.swift in Sources */,
@@ -255,7 +257,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				47179B961B1354FB00CAFD6D /* DirectoryCreatinOperation.swift in Sources */,
+				47179B961B1354FB00CAFD6D /* DirectoryCreationOperation.swift in Sources */,
 				47FFC2F91B092A3800D3EDFE /* Session.swift in Sources */,
 				47179B971B1354FB00CAFD6D /* ReadStreamOperation.swift in Sources */,
 				47179B981B1354FB00CAFD6D /* ResourceListOperation.swift in Sources */,
