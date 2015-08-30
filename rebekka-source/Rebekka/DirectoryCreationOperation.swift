@@ -1,5 +1,5 @@
 //
-//  DirectoryCreatinOperation.swift
+//  DirectoryCreationOperation.swift
 //  Rebekka
 //
 //  Created by Constantine Fry on 25/05/15.
