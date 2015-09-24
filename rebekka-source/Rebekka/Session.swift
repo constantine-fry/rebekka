@@ -71,11 +71,11 @@ public class Session {
         self.operationQueue.addOperation(operation)
     }
     
-    /** 
+    /**
     Downloads file at path from FTP server.
     File is stored in /tmp directory. Caller is responsible for deleting this file. */
-    public func download(path: String, completionHandler: FileURLResultCompletionHandler) {
-        let operation = FileDownloadOperation(configuration: configuration, queue: self.streamQueue)
+    public func download(path: String, destination: String, completionHandler: FileURLResultCompletionHandler) {
+        let operation = FileDownloadOperation(destination: destination, configuration: configuration, queue: self.streamQueue)
         operation.completionBlock = {
             [weak operation] in
             let strongOperation = operation!
@@ -109,12 +109,12 @@ public let kFTPAnonymousUser = "anonymous"
 public struct SessionConfiguration {
     /**
     The host of FTP server. Defaults to `localhost`.
-    Can be like this: 
-        ftp://192.168.0.1
-        127.0.0.1:21
-        localhost
-        ftp.mozilla.org
-        ftp://ftp.mozilla.org:21
+    Can be like this:
+    ftp://192.168.0.1
+    127.0.0.1:21
+    localhost
+    ftp.mozilla.org
+    ftp://ftp.mozilla.org:21
     */
     public var host: String = "localhost"
     
