@@ -13,10 +13,15 @@ internal class FileDownloadOperation: ReadStreamOperation {
     
     private var fileHandle: NSFileHandle?
     var fileURL: NSURL?
+    private var destination: String
+    
+    init(destination: String, configuration: SessionConfiguration, queue: dispatch_queue_t) {
+        self.destination = destination
+        super.init(configuration: configuration, queue: queue)
+    }
     
     override func start() {
-        let filePath = (NSTemporaryDirectory() as NSString).stringByAppendingPathComponent(NSUUID().UUIDString)
-        self.fileURL = NSURL(fileURLWithPath: filePath)
+        self.fileURL = NSURL(fileURLWithPath: destination)
         do {
             try NSData().writeToURL(self.fileURL!, options: NSDataWritingOptions.DataWritingAtomic)
             self.fileHandle = try NSFileHandle(forWritingToURL: self.fileURL!)
