@@ -27,8 +27,8 @@ public class ResourceItem: CustomStringConvertible {
     public var name: String = ""
     public var link: String = ""
     public var date: NSDate = NSDate()
-    public var size: UInt64 = 0
-    public var mode: Int32 = 0
+    public var size: Int = 0
+    public var mode: Int = 0
     public var owner: String = ""
     public var group: String = ""
     public var path: String = "/"
@@ -79,9 +79,9 @@ internal class ResourceListOperation: ReadStreamOperation {
         return (true, nil)
     }
     
-    private func mapFTPResources(ftpResources: [String : AnyObject]) -> ResourceItem {
+    private func mapFTPResources(ftpResources: NSDictionary) -> ResourceItem {
         let item = ResourceItem()
-        if let mode = ftpResources[kCFFTPResourceMode as String] as? Int32 {
+        if let mode = ftpResources[kCFFTPResourceMode as String] as? Int {
             item.mode = mode
         }
         if let name = ftpResources[kCFFTPResourceName as String] as? String {
@@ -106,7 +106,7 @@ internal class ResourceListOperation: ReadStreamOperation {
         if let link = ftpResources[kCFFTPResourceLink as String] as? String {
             item.link = link
         }
-        if let size = ftpResources[kCFFTPResourceSize as String] as? UInt64 {
+        if let size = ftpResources[kCFFTPResourceSize as String] as? Int {
             item.size = size
         }
         if let type = ftpResources[kCFFTPResourceType as String] as? Int {
