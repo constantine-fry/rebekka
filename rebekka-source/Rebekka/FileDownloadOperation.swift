@@ -49,8 +49,10 @@ internal class FileDownloadOperation: ReadStreamOperation {
             repeat {
                 parsetBytes = inputStream.read(self.temporaryBuffer, maxLength: 1024)
                 if parsetBytes > 0 {
-                    let data = NSData(bytes: self.temporaryBuffer, length: parsetBytes)
-                    self.fileHandle!.writeData(data)
+                    autoreleasepool {
+                        let data = NSData(bytes: self.temporaryBuffer, length: parsetBytes)
+                        self.fileHandle!.writeData(data)
+                    }
                 }
             } while (parsetBytes > 0)
         }
