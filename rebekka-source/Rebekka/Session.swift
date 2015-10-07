@@ -42,9 +42,10 @@ public class Session {
         let operation = ResourceListOperation(configuration: configuration, queue: self.streamQueue)
         operation.completionBlock = {
             [weak operation] in
-            let strongOperation = operation!
-            self.completionHandlerQueue.addOperationWithBlock {
-                completionHandler(strongOperation.resources, strongOperation.error)
+            if let strongOperation = operation {
+                self.completionHandlerQueue.addOperationWithBlock {
+                    completionHandler(strongOperation.resources, strongOperation.error)
+                }
             }
         }
         operation.path = path
@@ -59,9 +60,10 @@ public class Session {
         let operation = DirectoryCreationOperation(configuration: configuration, queue: self.streamQueue)
         operation.completionBlock = {
             [weak operation] in
-            let strongOperation = operation!
-            self.completionHandlerQueue.addOperationWithBlock {
-                completionHandler(strongOperation.error == nil, strongOperation.error)
+            if let strongOperation = operation {
+                self.completionHandlerQueue.addOperationWithBlock {
+                    completionHandler(strongOperation.error == nil, strongOperation.error)
+                }
             }
         }
         operation.path = path
@@ -78,9 +80,10 @@ public class Session {
         let operation = FileDownloadOperation(configuration: configuration, queue: self.streamQueue)
         operation.completionBlock = {
             [weak operation] in
-            let strongOperation = operation!
-            self.completionHandlerQueue.addOperationWithBlock {
-                completionHandler(strongOperation.fileURL, strongOperation.error)
+            if let strongOperation = operation {
+                self.completionHandlerQueue.addOperationWithBlock {
+                    completionHandler(strongOperation.fileURL, strongOperation.error)
+                }
             }
         }
         operation.path = path
@@ -92,9 +95,10 @@ public class Session {
         let operation = FileUploadOperation(configuration: configuration, queue: self.streamQueue)
         operation.completionBlock = {
             [weak operation] in
-            let strongOperation = operation!
-            self.completionHandlerQueue.addOperationWithBlock {
-                completionHandler(strongOperation.error == nil, strongOperation.error)
+            if let strongOperation = operation {
+                self.completionHandlerQueue.addOperationWithBlock {
+                    completionHandler(strongOperation.error == nil, strongOperation.error)
+                }
             }
         }
         operation.path = path
