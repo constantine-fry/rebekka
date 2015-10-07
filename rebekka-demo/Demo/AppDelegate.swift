@@ -9,11 +9,13 @@
 import UIKit
 import RebekkaTouch
 
-var _session: Session!
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    var session: Session!
+    
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -21,32 +23,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         var configuration = SessionConfiguration()
         configuration.host = "ftp://speedtest.tele2.net"
-        _session = Session(configuration: configuration)
-        _session.list("/") {
+        session = Session(configuration: configuration)
+        session.list("/") {
             (resources, error) -> Void in
             print("List directory with result:\n\(resources), error: \(error)\n\n")
         }
-        /*
-        _session.download("/Users/fry/ftp/test.png") {
+        
+        self.session.download("/200MB.zip") {
             (fileURL, error) -> Void in
-            println("Download file with result:\n\(fileURL), error: \(error)\n\n")
-            if fileURL != nil {
-                NSFileManager.defaultManager().removeItemAtURL(fileURL!, error: nil)
+            print("Download file with result:\n\(fileURL), error: \(error)\n\n")
+            if let fileURL = fileURL {
+                do {
+                    try NSFileManager.defaultManager().removeItemAtURL(fileURL)
+                } catch let error as NSError {
+                    print("Error: \(error)")
+                }
+                
             }
         }
-        
+        /*
         if let URL = NSBundle.mainBundle().URLForResource("TestUpload", withExtension: "png") {
             let path = "/Users/fry/ftp/\(NSUUID().UUIDString).png"
-            _session.upload(URL, path: path) {
+            session.upload(URL, path: path) {
                 (result, error) -> Void in
-                println("Upload file with result:\n\(result), error: \(error)\n\n")
+                print("Upload file with result:\n\(result), error: \(error)\n\n")
             }
         }
         
         let name = NSUUID().UUIDString
-        _session.createDirectory("/Users/fry/ftp/\(name)") {
+        session.createDirectory("/Users/fry/ftp/\(name)") {
             (result, error) -> Void in
-            println("Create directory with result:\n\(result), error: \(error)")
+            print("Create directory with result:\n\(result), error: \(error)")
         }
         */
         return true
