@@ -69,8 +69,8 @@ internal class ResourceListOperation: ReadStreamOperation {
         repeat {
             parsedBytes = CFFTPCreateParsedResourceListing(nil, bytes.advancedBy(offset), totalBytes - offset, entity)
             if parsedBytes > 0 {
-                if let fptResource = entity.memory?.takeUnretainedValue() {
-                    resources!.append(self.mapFTPResources(fptResource as! [String : AnyObject]))
+                if let fptResource = entity.memory?.takeUnretainedValue()  {
+                    resources!.append(self.mapFTPResources(fptResource))
                 }
                 offset += parsedBytes
             }
