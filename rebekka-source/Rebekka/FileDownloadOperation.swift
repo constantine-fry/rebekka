@@ -45,11 +45,14 @@ internal class FileDownloadOperation: ReadStreamOperation {
     
     override func streamEventHasBytes(aStream: NSStream) -> (Bool, NSError?) {
         if let inputStream = aStream as? NSInputStream {
-            let result = inputStream.read(self.temporaryBuffer, maxLength: 1024)
-            if result > 0 {
-                let data = NSData(bytes: self.temporaryBuffer, length: result)
-                self.fileHandle!.writeData(data)
-            }
+            var parsetBytes: Int = 0
+            repeat {
+                parsetBytes = inputStream.read(self.temporaryBuffer, maxLength: 1024)
+                if parsetBytes > 0 {
+                    let data = NSData(bytes: self.temporaryBuffer, length: parsetBytes)
+                    self.fileHandle!.writeData(data)
+                }
+            } while (parsetBytes > 0)
         }
         return (true, nil)
     }
