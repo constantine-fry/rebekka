@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         var configuration = SessionConfiguration()
-        configuration.host = "ftp://ftp.mozilla.org:21"
+        configuration.host = "ftp://speedtest.tele2.net"
         _session = Session(configuration: configuration)
         _session.list("/") {
             (resources, error) -> Void in
