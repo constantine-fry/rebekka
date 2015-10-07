@@ -24,12 +24,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var configuration = SessionConfiguration()
         configuration.host = "ftp://speedtest.tele2.net"
         session = Session(configuration: configuration)
+        
+        testList()
+        //testDownload()
+        //testUpload()
+        //testCreate()
+        return true
+    }
+    
+    func testList() {
         session.list("/") {
             (resources, error) -> Void in
             print("List directory with result:\n\(resources), error: \(error)\n\n")
         }
-        
-        self.session.download("/200MB.zip") {
+    }
+    
+    func testUpload() {
+        if let URL = NSBundle.mainBundle().URLForResource("TestUpload", withExtension: "png") {
+            let path = "/upload/\(NSUUID().UUIDString).png"
+            session.upload(URL, path: path) {
+                (result, error) -> Void in
+                print("Upload file with result:\n\(result), error: \(error)\n\n")
+            }
+        }
+    }
+    
+    func testDownload() {
+        self.session.download("/1MB.zip") {
             (fileURL, error) -> Void in
             print("Download file with result:\n\(fileURL), error: \(error)\n\n")
             if let fileURL = fileURL {
@@ -41,22 +62,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
             }
         }
-        /*
-        if let URL = NSBundle.mainBundle().URLForResource("TestUpload", withExtension: "png") {
-            let path = "/Users/fry/ftp/\(NSUUID().UUIDString).png"
-            session.upload(URL, path: path) {
-                (result, error) -> Void in
-                print("Upload file with result:\n\(result), error: \(error)\n\n")
-            }
-        }
-        
+    }
+    
+    func testCreate() {
         let name = NSUUID().UUIDString
-        session.createDirectory("/Users/fry/ftp/\(name)") {
+        session.createDirectory("/upload/\(name)") {
             (result, error) -> Void in
             print("Create directory with result:\n\(result), error: \(error)")
         }
-        */
-        return true
     }
 
 
