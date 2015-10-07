@@ -65,16 +65,17 @@ internal class ResourceListOperation: ReadStreamOperation {
         let totalBytes = CFIndex(self.inputData!.length)
         var parsedBytes = CFIndex(0)
         let entity = UnsafeMutablePointer<Unmanaged<CFDictionary>?>.alloc(1)
-        resources = [ResourceItem]()
+        var resources = [ResourceItem]()
         repeat {
             parsedBytes = CFFTPCreateParsedResourceListing(nil, bytes.advancedBy(offset), totalBytes - offset, entity)
             if parsedBytes > 0 {
                 if let fptResource = entity.memory?.takeUnretainedValue()  {
-                    resources!.append(self.mapFTPResources(fptResource))
+                    resources.append(self.mapFTPResources(fptResource))
                 }
                 offset += parsedBytes
             }
         } while (parsedBytes > 0)
+        self.resources = resources
         entity.destroy()
         return (true, nil)
     }
