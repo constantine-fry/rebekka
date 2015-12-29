@@ -44,7 +44,7 @@ internal class StreamOperation: Operation, NSStreamDelegate {
             return
         }
         
-        switch (eventCode) {
+        switch eventCode {
         case NSStreamEvent.OpenCompleted:
             streamEventOpenComleted(aStream)
         case NSStreamEvent.HasBytesAvailable:

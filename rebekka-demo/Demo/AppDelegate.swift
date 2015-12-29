@@ -13,23 +13,24 @@ import RebekkaTouch
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var session: Session!
     
     var window: UIWindow?
-
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
-        
-        var configuration = SessionConfiguration()
-        configuration.host = "ftp://speedtest.tele2.net"
-        session = Session(configuration: configuration)
-        
-        testList()
-        //testDownload()
-        //testUpload()
-        //testCreate()
-        return true
+    
+    func application(application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+            // Override point for customization after application launch.
+            
+            var configuration = SessionConfiguration()
+            configuration.host = "ftp://speedtest.tele2.net"
+            session = Session(configuration: configuration)
+            
+            testList()
+            //testDownload()
+            //testUpload()
+            //testCreate()
+            return true
     }
     
     func testList() {
@@ -71,7 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Create directory with result:\n\(result), error: \(error)")
         }
     }
-
-
+    
+    
 }
 

@@ -40,7 +40,7 @@ internal class FileUploadOperation: WriteStreamOperation {
             let writtenBytes = writeStream.write(UnsafePointer<UInt8>(data.bytes), maxLength: data.length)
             if writtenBytes > 0 {
                 self.fileHandle?.seekToFileOffset(offsetInFile + UInt64(writtenBytes))
-            } else if (writtenBytes == -1) {
+            } else if writtenBytes == -1 {
                 self.finishOperation()
             }
         }
