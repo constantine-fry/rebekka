@@ -40,6 +40,7 @@ internal class FileDownloadOperation: ReadStreamOperation {
             } catch _ {
             }
         }
+        self.error = NSError(domain: "streamEventError", code: 0, userInfo: nil)
         self.fileURL = nil
     }
     
