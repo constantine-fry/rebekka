@@ -70,6 +70,7 @@ internal class StreamOperation: Operation, NSStreamDelegate {
     }
     
     func finishOperation() {
+        NSThread.sleepForTimeInterval(0.1)
         self.currentStream?.close()
         self.currentStream = nil
         self.state = .Finished
