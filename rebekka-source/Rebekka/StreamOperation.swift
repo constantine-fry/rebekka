@@ -38,7 +38,7 @@ internal class StreamOperation: Operation, NSStreamDelegate {
     
     @objc func stream(aStream: NSStream, handleEvent eventCode: NSStreamEvent) {
         if self.cancelled {
-            streamEventError(aStream)
+            self.streamEventError(aStream)
             self.error = NSError(domain: NSCocoaErrorDomain, code: NSUserCancelledError, userInfo: nil)
             self.finishOperation()
             return
@@ -46,16 +46,16 @@ internal class StreamOperation: Operation, NSStreamDelegate {
         
         switch eventCode {
         case NSStreamEvent.OpenCompleted:
-            streamEventOpenComleted(aStream)
+            self.streamEventOpenComleted(aStream)
         case NSStreamEvent.HasBytesAvailable:
-            streamEventHasBytes(aStream)
+            self.streamEventHasBytes(aStream)
         case NSStreamEvent.HasSpaceAvailable:
-            streamEventHasSpace(aStream)
+            self.streamEventHasSpace(aStream)
         case NSStreamEvent.ErrorOccurred:
-            streamEventError(aStream)
+            self.streamEventError(aStream)
             self.finishOperation()
         case NSStreamEvent.EndEncountered:
-            streamEventEnd(aStream)
+            self.streamEventEnd(aStream)
             self.finishOperation()
         default:
             print("Unkonwn NSStreamEvent: \(eventCode)")
