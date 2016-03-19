@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             var configuration = SessionConfiguration()
             configuration.host = "ftp://speedtest.tele2.net"
-            session = Session(configuration: configuration)
+            self.session = Session(configuration: configuration)
             
             testList()
             //testDownload()
@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func testList() {
-        session.list("/") {
+        self.session.list("/") {
             (resources, error) -> Void in
             print("List directory with result:\n\(resources), error: \(error)\n\n")
         }
@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func testUpload() {
         if let URL = NSBundle.mainBundle().URLForResource("TestUpload", withExtension: "png") {
             let path = "/upload/\(NSUUID().UUIDString).png"
-            session.upload(URL, path: path) {
+            self.session.upload(URL, path: path) {
                 (result, error) -> Void in
                 print("Upload file with result:\n\(result), error: \(error)\n\n")
             }
@@ -67,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func testCreate() {
         let name = NSUUID().UUIDString
-        session.createDirectory("/upload/\(name)") {
+        self.session.createDirectory("/upload/\(name)") {
             (result, error) -> Void in
             print("Create directory with result:\n\(result), error: \(error)")
         }
