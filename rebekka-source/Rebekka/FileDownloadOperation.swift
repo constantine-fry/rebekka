@@ -33,6 +33,7 @@ internal class FileDownloadOperation: ReadStreamOperation {
     }
     
     override func streamEventError(aStream: NSStream) {
+        super.streamEventError(aStream)
         self.fileHandle?.closeFile()
         if self.fileURL != nil {
             do {

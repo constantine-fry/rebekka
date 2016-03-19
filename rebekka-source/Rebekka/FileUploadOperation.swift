@@ -30,6 +30,7 @@ internal class FileUploadOperation: WriteStreamOperation {
     }
     
     override func streamEventError(aStream: NSStream) {
+        super.streamEventError(aStream)
         self.fileHandle?.closeFile()
     }
     
