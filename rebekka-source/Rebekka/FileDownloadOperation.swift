@@ -17,18 +17,22 @@ internal class FileDownloadOperation: ReadStreamOperation {
     override func start() {
         let filePath = (NSTemporaryDirectory() as NSString).stringByAppendingPathComponent(NSUUID().UUIDString)
         fileURL = NSURL(fileURLWithPath: filePath)
-        if let fileURL = fileURL {
-            do {
-                try NSData().writeToURL(fileURL, options: NSDataWritingOptions.DataWritingAtomic)
-                fileHandle = try NSFileHandle(forWritingToURL: fileURL)
-                startOperationWithStream(readStream)
-            } catch let error as NSError {
-                self.error = error
-                finishOperation()
-            }
+        guard let fileURL = fileURL else {
+            error = NSError(domain: "streamEventError", code: 1, userInfo: nil)
+            finishOperation()
+            return
+        }
+        do {
+            try NSData().writeToURL(fileURL, options: NSDataWritingOptions.DataWritingAtomic)
+            fileHandle = try NSFileHandle(forWritingToURL: fileURL)
+            startOperationWithStream(readStream)
+        } catch let error as NSError {
+            self.error = error
+            fileHandle = nil
+            finishOperation()
         }
     }
-    
+
     override func streamEventEnd(aStream: NSStream) -> (Bool, NSError?) {
         fileHandle?.closeFile()
         return (true, nil)

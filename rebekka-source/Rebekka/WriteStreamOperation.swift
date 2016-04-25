@@ -12,11 +12,9 @@ import Foundation
 internal class WriteStreamOperation: StreamOperation {
     
     lazy var writeStream: NSOutputStream = {
-        let url = self.fullURL()
-        let cfStream = CFWriteStreamCreateWithFTPURL(nil, url)
+        let cfStream = CFWriteStreamCreateWithFTPURL(nil, self.fullURL())
         CFWriteStreamSetDispatchQueue(cfStream.takeUnretainedValue(), self.queue)
-        let stream: NSOutputStream = cfStream.takeRetainedValue()
-        return stream
+        return cfStream.takeRetainedValue()
     }()
     
     internal override func start() {

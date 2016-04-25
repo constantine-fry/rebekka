@@ -141,11 +141,7 @@ public struct SessionConfiguration {
         if !stringURL.hasPrefix("ftp://") {
             stringURL = "ftp://\(host)/"
         }
-        if let url = NSURL(string: stringURL) {
-            return url
-        } else {
-            return NSURL()
-        }
+        return NSURL(string: stringURL) ?? NSURL()
     }
 }
 

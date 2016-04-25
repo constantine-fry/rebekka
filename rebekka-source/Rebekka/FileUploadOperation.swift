@@ -14,15 +14,18 @@ internal class FileUploadOperation: WriteStreamOperation {
     var fileURL: NSURL?
     
     override func start() {
-        if let fileURL = fileURL {
-            do {
-                fileHandle = try NSFileHandle(forReadingFromURL: fileURL)
-                startOperationWithStream(writeStream)
-            } catch let error as NSError {
-                self.error = error
-                fileHandle = nil
-                finishOperation()
-            }
+        guard let fileURL = fileURL else {
+            error = NSError(domain: "streamEventError", code: 1, userInfo: nil)
+            finishOperation()
+            return
+        }
+        do {
+            fileHandle = try NSFileHandle(forReadingFromURL: fileURL)
+            startOperationWithStream(writeStream)
+        } catch let error as NSError {
+            self.error = error
+            fileHandle = nil
+            finishOperation()
         }
     }
     
@@ -36,15 +39,16 @@ internal class FileUploadOperation: WriteStreamOperation {
     }
     
     override func streamEventHasSpace(aStream: NSStream) -> (Bool, NSError?) {
-        if let fileHandle = fileHandle, writeStream = aStream as? NSOutputStream {
-            let offsetInFile = fileHandle.offsetInFile
-            let data = fileHandle.readDataOfLength(1024)
-            let writtenBytes = writeStream.write(UnsafePointer<UInt8>(data.bytes), maxLength: data.length)
-            if writtenBytes > 0 {
-                fileHandle.seekToFileOffset(offsetInFile + UInt64(writtenBytes))
-            } else if writtenBytes == -1 {
-                finishOperation()
-            }
+        guard let fileHandle = fileHandle, writeStream = aStream as? NSOutputStream else {
+            return (true, nil)
+        }
+        let offsetInFile = fileHandle.offsetInFile
+        let data = fileHandle.readDataOfLength(1024)
+        let writtenBytes = writeStream.write(UnsafePointer<UInt8>(data.bytes), maxLength: data.length)
+        if writtenBytes > 0 {
+            fileHandle.seekToFileOffset(offsetInFile + UInt64(writtenBytes))
+        } else {
+            finishOperation()
         }
         return (true, nil)
     }

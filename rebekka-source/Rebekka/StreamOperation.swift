@@ -64,10 +64,13 @@ internal class StreamOperation: Operation, NSStreamDelegate {
     
     func startOperationWithStream(aStream: NSStream) {
         currentStream = aStream
-        if let currentStream = currentStream {
-            configureStream(currentStream)
-            currentStream.open()
+        guard let currentStream = currentStream else {
+            print("ERROR in StreamOperation.startOperationWithStream: currentStream is nil")
+            finishOperation()
+            return
         }
+        configureStream(currentStream)
+        currentStream.open()
         state = .Executing
     }
     
