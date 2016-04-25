@@ -23,24 +23,24 @@ internal class StreamOperation: Operation, NSStreamDelegate {
     private func configureStream(stream: NSStream) {
         stream.setProperty(true, forKey: kCFStreamPropertyShouldCloseNativeSocket as String)
         stream.setProperty(true, forKey: kCFStreamPropertyFTPFetchResourceInfo as String)
-        stream.setProperty(self.configuration.passive, forKey: kCFStreamPropertyFTPUsePassiveMode as String)
-        stream.setProperty(self.configuration.username, forKey: kCFStreamPropertyFTPUserName as String)
-        stream.setProperty(self.configuration.password, forKey: kCFStreamPropertyFTPPassword as String)
+        stream.setProperty(configuration.passive, forKey: kCFStreamPropertyFTPUsePassiveMode as String)
+        stream.setProperty(configuration.username, forKey: kCFStreamPropertyFTPUserName as String)
+        stream.setProperty(configuration.password, forKey: kCFStreamPropertyFTPPassword as String)
         stream.delegate = self
     }
     
     func fullURL() -> NSURL {
-        if self.path != nil {
-            return self.configuration.URL().URLByAppendingPathComponent(path!)
+        if let path = path {
+            return configuration.URL().URLByAppendingPathComponent(path)
         }
-        return self.configuration.URL()
+        return configuration.URL()
     }
     
     @objc func stream(aStream: NSStream, handleEvent eventCode: NSStreamEvent) {
-        if self.cancelled {
+        if cancelled {
             streamEventError(aStream)
-            self.error = NSError(domain: NSCocoaErrorDomain, code: NSUserCancelledError, userInfo: nil)
-            self.finishOperation()
+            error = NSError(domain: NSCocoaErrorDomain, code: NSUserCancelledError, userInfo: nil)
+            finishOperation()
             return
         }
         
@@ -53,27 +53,29 @@ internal class StreamOperation: Operation, NSStreamDelegate {
             streamEventHasSpace(aStream)
         case NSStreamEvent.ErrorOccurred:
             streamEventError(aStream)
-            self.finishOperation()
+            finishOperation()
         case NSStreamEvent.EndEncountered:
             streamEventEnd(aStream)
-            self.finishOperation()
+            finishOperation()
         default:
             print("Unkonwn NSStreamEvent: \(eventCode)")
         }
     }
     
     func startOperationWithStream(aStream: NSStream) {
-        self.currentStream = aStream
-        self.configureStream(self.currentStream!)
-        self.currentStream!.open()
-        self.state = .Executing
+        currentStream = aStream
+        if let currentStream = currentStream {
+            configureStream(currentStream)
+            currentStream.open()
+        }
+        state = .Executing
     }
     
     func finishOperation() {
         NSThread.sleepForTimeInterval(0.1)
-        self.currentStream?.close()
-        self.currentStream = nil
-        self.state = .Finished
+        currentStream?.close()
+        currentStream = nil
+        state = .Finished
     }
     
     func streamEventOpenComleted(aStream: NSStream) -> (Bool, NSError?) {
@@ -93,6 +95,6 @@ internal class StreamOperation: Operation, NSStreamDelegate {
     }
     
     func streamEventError(aStream: NSStream) {
-        self.error = aStream.streamError
+        error = aStream.streamError
     }
 }

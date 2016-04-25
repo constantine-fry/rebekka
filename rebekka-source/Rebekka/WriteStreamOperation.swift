@@ -13,13 +13,13 @@ internal class WriteStreamOperation: StreamOperation {
     
     lazy var writeStream: NSOutputStream = {
         let url = self.fullURL()
-        let cfStream = CFWriteStreamCreateWithFTPURL(nil, self.fullURL())
+        let cfStream = CFWriteStreamCreateWithFTPURL(nil, url)
         CFWriteStreamSetDispatchQueue(cfStream.takeUnretainedValue(), self.queue)
         let stream: NSOutputStream = cfStream.takeRetainedValue()
         return stream
     }()
     
     internal override func start() {
-        self.startOperationWithStream(self.writeStream)
+        startOperationWithStream(writeStream)
     }
 }

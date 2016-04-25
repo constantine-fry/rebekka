@@ -24,22 +24,22 @@ internal class Operation: NSOperation {
     
     internal var state = OperationState.Ready {
         willSet {
-            self.willChangeValueForKey("isReady")
-            self.willChangeValueForKey("isExecuting")
-            self.willChangeValueForKey("isFinished")
+            willChangeValueForKey("isReady")
+            willChangeValueForKey("isExecuting")
+            willChangeValueForKey("isFinished")
         }
         didSet {
-            self.didChangeValueForKey("isReady")
-            self.didChangeValueForKey("isExecuting")
-            self.didChangeValueForKey("isFinished")
+            didChangeValueForKey("isReady")
+            didChangeValueForKey("isExecuting")
+            didChangeValueForKey("isFinished")
         }
     }
     
     override var asynchronous: Bool { get { return true } }
     
-    override var ready: Bool { get { return self.state == .Ready } }
-    override var executing: Bool { get { return self.state == .Executing } }
-    override var finished: Bool { get { return self.state == .Finished } }
+    override var ready: Bool { get { return state == .Ready } }
+    override var executing: Bool { get { return state == .Executing } }
+    override var finished: Bool { get { return state == .Finished } }
     
     init(configuration: SessionConfiguration) {
         self.configuration = configuration

@@ -60,24 +60,28 @@ internal class ResourceListOperation: ReadStreamOperation {
     var resources: [ResourceItem]?
     
     override func streamEventEnd(aStream: NSStream) -> (Bool, NSError?) {
-        var offset = 0
-        let bytes = UnsafePointer<UInt8>(self.inputData!.bytes)
-        let totalBytes = CFIndex(self.inputData!.length)
-        var parsedBytes = CFIndex(0)
-        let entity = UnsafeMutablePointer<Unmanaged<CFDictionary>?>.alloc(1)
-        var resources = [ResourceItem]()
-        repeat {
-            parsedBytes = CFFTPCreateParsedResourceListing(nil, bytes.advancedBy(offset), totalBytes - offset, entity)
-            if parsedBytes > 0 {
-                let value = entity.memory?.takeUnretainedValue()
-                if let fptResource = value {
-                    resources.append(self.mapFTPResources(fptResource))
+        if let inputData = inputData {
+            var offset = 0
+            let bytes = UnsafePointer<UInt8>(inputData.bytes)
+            let totalBytes = CFIndex(inputData.length)
+            let entity = UnsafeMutablePointer<Unmanaged<CFDictionary>?>.alloc(1)
+            var resources = [ResourceItem]()
+            var parsedBytes = CFIndex(0)
+            repeat {
+                parsedBytes = CFFTPCreateParsedResourceListing(nil, bytes.advancedBy(offset), totalBytes - offset, entity)
+                if parsedBytes > 0 {
+                    let value = entity.memory?.takeUnretainedValue()
+                    if let ftpResource = value {
+                        resources.append(mapFTPResources(ftpResource))
+                    }
+                    offset += parsedBytes
                 }
-                offset += parsedBytes
-            }
-        } while parsedBytes > 0
-        self.resources = resources
-        entity.destroy()
+            } while parsedBytes > 0
+            self.resources = resources
+            entity.destroy()
+        } else {
+            print("ERROR in ResourceListOperation.streamEventEnd: inputData was null")
+        }
         return (true, nil)
     }
     
@@ -97,7 +101,9 @@ internal class ResourceListOperation: ReadStreamOperation {
                     item.name = encodedName as String
                 }
             }
-            item.path = self.path!.stringByAppendingString(item.name)
+            if let path = path {
+                item.path = path.stringByAppendingString(item.name)
+            }
         }
         if let owner = ftpResources[kCFFTPResourceOwner as String] as? String {
             item.owner = owner
@@ -127,11 +133,14 @@ internal class ResourceListOperation: ReadStreamOperation {
             let buffer = UnsafeMutablePointer<UInt8>.alloc(1024)
             let result = inputStream.read(buffer, maxLength: 1024)
             if result > 0 {
-                if self.inputData == nil {
-                    self.inputData = NSMutableData(bytes: buffer, length: result)
+                if let _ = inputData {
+                    inputData?.appendBytes(buffer, length: result)
                 } else {
-                    self.inputData!.appendBytes(buffer, length: result)
+                    print("ERROR in streamEventHasBytes: inputData was null")
+                    inputData = NSMutableData(bytes: buffer, length: result)
                 }
+            } else {
+                print("ERROR in streamEventHasBytes: read result was \(result), expected > 0")
             }
             buffer.destroy()
         }

@@ -29,17 +29,17 @@ public class Session {
     
     public init(configuration: SessionConfiguration,
         completionHandlerQueue: NSOperationQueue = NSOperationQueue.mainQueue()) {
-            self.operationQueue = NSOperationQueue()
-            self.operationQueue.maxConcurrentOperationCount = 1
-            self.operationQueue.name = "net.ftp.rebekka.operations.queue"
-            self.streamQueue = dispatch_queue_create("net.ftp.rebekka.cfstream.queue", nil)
+            operationQueue = NSOperationQueue()
+            operationQueue.maxConcurrentOperationCount = 1
+            operationQueue.name = "net.ftp.rebekka.operations.queue"
+            streamQueue = dispatch_queue_create("net.ftp.rebekka.cfstream.queue", nil)
             self.completionHandlerQueue = completionHandlerQueue
             self.configuration = configuration
     }
     
     /** Returns content of directory at path. */
     public func list(path: String, completionHandler: ResourceResultCompletionHandler) {
-        let operation = ResourceListOperation(configuration: configuration, queue: self.streamQueue)
+        let operation = ResourceListOperation(configuration: configuration, queue: streamQueue)
         operation.completionBlock = {
             [weak operation] in
             if let strongOperation = operation {
@@ -50,14 +50,14 @@ public class Session {
         }
         operation.path = path
         if !path.hasSuffix("/") {
-            operation.path = operation.path! + "/"
+            operation.path = path + "/"
         }
-        self.operationQueue.addOperation(operation)
+        operationQueue.addOperation(operation)
     }
     
     /** Creates new directory at path. */
     public func createDirectory(path: String, completionHandler: BooleanResultCompletionHandler) {
-        let operation = DirectoryCreationOperation(configuration: configuration, queue: self.streamQueue)
+        let operation = DirectoryCreationOperation(configuration: configuration, queue: streamQueue)
         operation.completionBlock = {
             [weak operation] in
             if let strongOperation = operation {
@@ -68,16 +68,16 @@ public class Session {
         }
         operation.path = path
         if !path.hasSuffix("/") {
-            operation.path = operation.path! + "/"
+            operation.path = path + "/"
         }
-        self.operationQueue.addOperation(operation)
+        operationQueue.addOperation(operation)
     }
     
     /** 
     Downloads file at path from FTP server.
     File is stored in /tmp directory. Caller is responsible for deleting this file. */
     public func download(path: String, completionHandler: FileURLResultCompletionHandler) {
-        let operation = FileDownloadOperation(configuration: configuration, queue: self.streamQueue)
+        let operation = FileDownloadOperation(configuration: configuration, queue: streamQueue)
         operation.completionBlock = {
             [weak operation] in
             if let strongOperation = operation {
@@ -87,12 +87,12 @@ public class Session {
             }
         }
         operation.path = path
-        self.operationQueue.addOperation(operation)
+        operationQueue.addOperation(operation)
     }
     
     /** Uploads file from fileURL at path. */
     public func upload(fileURL: NSURL, path: String, completionHandler: BooleanResultCompletionHandler) {
-        let operation = FileUploadOperation(configuration: configuration, queue: self.streamQueue)
+        let operation = FileUploadOperation(configuration: configuration, queue: streamQueue)
         operation.completionBlock = {
             [weak operation] in
             if let strongOperation = operation {
@@ -103,7 +103,7 @@ public class Session {
         }
         operation.path = path
         operation.fileURL = fileURL
-        self.operationQueue.addOperation(operation)
+        operationQueue.addOperation(operation)
     }
 }
 
@@ -141,8 +141,11 @@ public struct SessionConfiguration {
         if !stringURL.hasPrefix("ftp://") {
             stringURL = "ftp://\(host)/"
         }
-        let url = NSURL(string: stringURL)
-        return url!
+        if let url = NSURL(string: stringURL) {
+            return url
+        } else {
+            return NSURL()
+        }
     }
 }
 
@@ -150,7 +153,7 @@ public struct SessionConfiguration {
 private class SessionConfigurationStorage {
     
     /** The URL to plist file. */
-    private let storageURL: NSURL!
+    private let storageURL: NSURL
     
     init() {
         storageURL = NSURL(fileURLWithPath: "")

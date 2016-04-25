@@ -16,47 +16,51 @@ internal class FileDownloadOperation: ReadStreamOperation {
     
     override func start() {
         let filePath = (NSTemporaryDirectory() as NSString).stringByAppendingPathComponent(NSUUID().UUIDString)
-        self.fileURL = NSURL(fileURLWithPath: filePath)
-        do {
-            try NSData().writeToURL(self.fileURL!, options: NSDataWritingOptions.DataWritingAtomic)
-            self.fileHandle = try NSFileHandle(forWritingToURL: self.fileURL!)
-            self.startOperationWithStream(self.readStream)
-        } catch let error as NSError {
-            self.error = error
-            self.finishOperation()
+        fileURL = NSURL(fileURLWithPath: filePath)
+        if let fileURL = fileURL {
+            do {
+                try NSData().writeToURL(fileURL, options: NSDataWritingOptions.DataWritingAtomic)
+                fileHandle = try NSFileHandle(forWritingToURL: fileURL)
+                startOperationWithStream(readStream)
+            } catch let error as NSError {
+                self.error = error
+                finishOperation()
+            }
         }
     }
     
     override func streamEventEnd(aStream: NSStream) -> (Bool, NSError?) {
-        self.fileHandle?.closeFile()
+        fileHandle?.closeFile()
         return (true, nil)
     }
     
     override func streamEventError(aStream: NSStream) {
-        self.fileHandle?.closeFile()
-        if self.fileURL != nil {
+        fileHandle?.closeFile()
+        if let fileURL = fileURL {
             do {
-                try NSFileManager.defaultManager().removeItemAtURL(self.fileURL!)
+                try NSFileManager.defaultManager().removeItemAtURL(fileURL)
             } catch _ {
             }
         }
-        self.error = NSError(domain: "streamEventError", code: 0, userInfo: nil)
-        self.fileURL = nil
+        error = NSError(domain: "streamEventError", code: 0, userInfo: nil)
+        fileURL = nil
     }
     
     override func streamEventHasBytes(aStream: NSStream) -> (Bool, NSError?) {
-        if let inputStream = aStream as? NSInputStream {
-            var parsetBytes: Int = 0
-            repeat {
-                parsetBytes = inputStream.read(self.temporaryBuffer, maxLength: 1024)
-                if parsetBytes > 0 {
+        var parsedBytes: Int = 0
+        repeat {
+            parsedBytes = 0
+            if let inputStream = aStream as? NSInputStream {
+                parsedBytes = inputStream.read(temporaryBuffer, maxLength: 1024)
+                if parsedBytes > 0 {
                     autoreleasepool {
-                        let data = NSData(bytes: self.temporaryBuffer, length: parsetBytes)
-                        self.fileHandle!.writeData(data)
+                        let data = NSData(bytes: temporaryBuffer, length: parsedBytes)
+                        fileHandle?.writeData(data)
                     }
                 }
-            } while (parsetBytes > 0)
-        }
+            }
+        } while (parsedBytes > 0)
+        
         return (true, nil)
     }
 }

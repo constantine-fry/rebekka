@@ -22,6 +22,6 @@ internal class ReadStreamOperation: StreamOperation {
     }()
     
     override func start() {
-        self.startOperationWithStream(self.readStream)
+        startOperationWithStream(readStream)
     }
 }
