@@ -10,8 +10,7 @@ Pod::Spec.new do |s|
   s.name         = "rebekka"
   s.version      = "1.0.1"
   s.summary      = "Rebekka - FTP/FTPS client in Swift."
-  s.description  = <<-DESC
-                   DESC
+  s.description  = "Description"
   s.homepage     = "https://github.com/BYTEPOETS/rebekka"
   s.license      = "MIT"
   s.author       = { "BYTEPOETS GmbH" => "development@bytepoets.com" }
