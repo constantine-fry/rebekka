@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
                    DESC
   s.homepage     = "https://github.com/Constantine-Fry/rebekka/"
   s.license      = "BSD 2-Clause License"
-  s.author       = { "Constantine Fry" }
+  s.author       = "Constantine Fry" 
 
   s.ios.deployment_target = "8.0"
   s.osx.deployment_target = "10.9"
