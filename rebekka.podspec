@@ -10,15 +10,15 @@ Pod::Spec.new do |s|
   s.name         = "rebekka"
   s.version      = "1.0.2"
   s.summary      = "Rebekka - FTP/FTPS client in Swift."
-  s.description  = <<-DESC
-                   DESC
+  s.description  = "A simple FTP/FTPS client in Swift."
+
   s.homepage     = "https://github.com/Constantine-Fry/rebekka/"
   s.license      = "BSD 2-Clause License"
-  s.author       = "Constantine Fry" 
+  s.author       = "Constantine Fry"
 
   s.ios.deployment_target = "8.0"
   s.osx.deployment_target = "10.9"
-  s.source        = { :git => "https://github.com/Constantine-Fry/rebekka", :tag => "1.0.2" }
+  s.source        = { :git => "https://github.com/Constantine-Fry/rebekka.git", :tag => "1.0.2" }
   s.source_files  = "Classes", "Classes/**/*.{h,m}"
   s.exclude_files = "Classes/Exclude"
 
