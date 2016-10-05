@@ -16,8 +16,8 @@ Pod::Spec.new do |s|
   s.license      = "BSD 2-Clause License"
   s.author       = "Constantine Fry"
 
-  s.ios.deployment_target = "8.0"
-  s.osx.deployment_target = "10.9"
+  s.ios.deployment_target = "9.0"
+  s.osx.deployment_target = "10.10"
   s.source        = { :git => "https://github.com/128keaton/rebekka.git", :tag => "1.0.3" }
   s.source_files  = "Classes", "Classes/**/*.{h,m}"
   s.exclude_files = "Classes/Exclude"
