@@ -11,7 +11,7 @@ import Foundation
 /** Operation for downloading a file from FTP server. */
 internal class FileDownloadOperation: ReadStreamOperation {
     
-    fileprivate var fileHandle: FileHandle?
+    private var fileHandle: FileHandle?
     var fileURL: URL?
     
     override func start() {
