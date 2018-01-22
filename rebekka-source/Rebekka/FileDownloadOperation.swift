@@ -52,7 +52,7 @@ internal class FileDownloadOperation: ReadStreamOperation {
         if let inputStream = aStream as? InputStream {
             var parsetBytes: Int = 0
             repeat {
-                parsetBytes = inputStream.read(self.temporaryBuffer, maxLength: 1024)
+                parsetBytes = inputStream.read(self.temporaryBuffer, maxLength: 65536)
                 downloadedBytes += parsetBytes
                 progressHandler?(Float(downloadedBytes) / Float(totalBytesSize))
                 if parsetBytes > 0 {

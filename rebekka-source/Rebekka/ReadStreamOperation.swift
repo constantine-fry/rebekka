@@ -12,7 +12,7 @@ import Foundation
 internal class ReadStreamOperation: StreamOperation {
     
     internal lazy var temporaryBuffer: UnsafeMutablePointer<UInt8> = {
-        return UnsafeMutablePointer<UInt8>.allocate(capacity: 1024)
+        return UnsafeMutablePointer<UInt8>.allocate(capacity: 65536)
     }()
     
     lazy var readStream: InputStream = {
