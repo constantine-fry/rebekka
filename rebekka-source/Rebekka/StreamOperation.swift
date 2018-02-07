@@ -28,11 +28,11 @@ internal class StreamOperation: Operation, StreamDelegate {
         stream.delegate = self
     }
     
-    var fullURL: URL {
+    var fullUrl: URL {
         guard let path = self.path else {
-            return configuration.URL() as URL
+            return configuration.url
         }
-        return configuration.URL().appendingPathComponent(path)
+        return configuration.url.appendingPathComponent(path)
     }
     
     @objc func stream(_ aStream: Stream, handle eventCode: Stream.Event) {

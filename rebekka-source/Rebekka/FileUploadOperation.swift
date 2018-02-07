@@ -41,7 +41,8 @@ internal class FileUploadOperation: WriteStreamOperation {
         }
         let offsetInFile = fileHandle.offsetInFile
         let data = fileHandle.readData(ofLength: 1024)
-        let writtenBytes = writeStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
+        let bytesToWrite = (data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count)
+        let writtenBytes = writeStream.write(bytesToWrite, maxLength: data.count)
         if writtenBytes > 0 {
             self.fileHandle?.seek(toFileOffset: offsetInFile + UInt64(writtenBytes))
         } else if writtenBytes == -1 {
@@ -51,4 +52,3 @@ internal class FileUploadOperation: WriteStreamOperation {
     }
     
 }
-

@@ -12,4 +12,3 @@ import Foundation
 internal class DirectoryCreationOperation: WriteStreamOperation {
     
 }
-

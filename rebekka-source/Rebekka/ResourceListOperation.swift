@@ -40,9 +40,9 @@ open class ResourceItem: CustomStringConvertible {
 
 
 private let _resourceTypeMap: [Int:ResourceType] = [
-    Int(DT_UNKNOWN): ResourceType.Unknown,
-    Int(DT_FIFO):    ResourceType.NamedPipe,
-    Int(DT_SOCK):    ResourceType.LocalDomainSocket,
+    Int(DT_UNKNOWN): .Unknown,
+    Int(DT_FIFO): .NamedPipe,
+    Int(DT_SOCK): ResourceType.LocalDomainSocket,
     Int(DT_CHR): ResourceType.CharacterDevice,
     Int(DT_DIR): ResourceType.Directory,
     Int(DT_BLK): ResourceType.BlockDevice,

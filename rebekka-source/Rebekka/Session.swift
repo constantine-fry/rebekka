@@ -140,13 +140,10 @@ public struct SessionConfiguration {
     
     public init() { }
     
-    internal func URL() -> Foundation.URL {
-        var stringURL = host
-        if !stringURL.hasPrefix("ftp://") {
-            stringURL = "ftp://\(host)/"
-        }
-        let url = Foundation.URL(string: stringURL)
-        return url!
+    internal var url: Foundation.URL {
+        var components = URLComponents(string: host)
+        components?.scheme = "ftp"
+        return (components?.url)!
     }
 }
 
@@ -181,4 +178,3 @@ private class SessionConfigurationStorage {
 private class CredentialsStorage {
     
 }
-

@@ -12,7 +12,7 @@ import Foundation
 internal class WriteStreamOperation: StreamOperation {
     
     lazy var writeStream: OutputStream = {
-        let cfStream = CFWriteStreamCreateWithFTPURL(nil, fullURL as CFURL)
+        let cfStream = CFWriteStreamCreateWithFTPURL(nil, fullUrl as CFURL)
         CFWriteStreamSetDispatchQueue(cfStream.takeUnretainedValue(), queue)
         return cfStream.takeRetainedValue()
     }()
@@ -21,4 +21,3 @@ internal class WriteStreamOperation: StreamOperation {
         startOperationWithStream(self.writeStream)
     }
 }
-
