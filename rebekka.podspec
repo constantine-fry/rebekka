@@ -8,16 +8,15 @@
 
 Pod::Spec.new do |s|
   s.name         = "rebekka"
-  s.version      = "1.0.1"
+  s.version      = "1.0.5"
   s.summary      = "Rebekka - FTP/FTPS client in Swift."
-  s.description  = "Description"
-  s.homepage     = "https://github.com/BYTEPOETS/rebekka"
-  s.license      = "MIT"
-  s.author       = { "BYTEPOETS GmbH" => "development@bytepoets.com" }
+  s.homepage     = "https://github.com/fvonk/rebekka"
+  s.license      = "BSD 2-Clause License"
+  s.author       = { "Constantine Fry" => "test@gmail.com" }
 
   s.ios.deployment_target = "8.0"
   s.osx.deployment_target = "10.9"
-  s.source        = { :git => "https://github.com/BYTEPOETS/rebekka.git", :tag => "1.0.1" }
+  s.source        = { :git => "https://github.com/fvonk/rebekka", :tag => "1.0.5" }
   s.source_files  = "Classes", "Classes/**/*.{h,m}"
   s.exclude_files = "Classes/Exclude"
 

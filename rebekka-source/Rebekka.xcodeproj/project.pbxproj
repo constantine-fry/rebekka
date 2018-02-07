@@ -36,6 +36,7 @@
 		47179B8A1B13543B00CAFD6D /* FileDownloadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDownloadOperation.swift; sourceTree = "<group>"; };
 		47179B8E1B13549000CAFD6D /* FileUploadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUploadOperation.swift; sourceTree = "<group>"; };
 		47179B901B1354B200CAFD6D /* DirectoryCreationOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryCreationOperation.swift; sourceTree = "<group>"; };
+		47E972DE1C9DB20F00FFE3B3 /* rebekka.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = rebekka.podspec; path = ../rebekka.podspec; sourceTree = "<group>"; };
 		47FFC2661B0926C600D3EDFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		47FFC2831B09279200D3EDFE /* Rebekka.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rebekka.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		47FFC2DC1B09297E00D3EDFE /* RebekkaTouch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RebekkaTouch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +95,7 @@
 		47FFC2581B0926C600D3EDFE = {
 			isa = PBXGroup;
 			children = (
+				47E972DE1C9DB20F00FFE3B3 /* rebekka.podspec */,
 				47FFC2641B0926C600D3EDFE /* Rebekka */,
 				47FFC2631B0926C600D3EDFE /* Products */,
 			);
@@ -346,6 +348,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -386,6 +389,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";

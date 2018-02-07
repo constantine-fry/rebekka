@@ -11,62 +11,59 @@ import Foundation
 /** Operation for downloading a file from FTP server. */
 internal class FileDownloadOperation: ReadStreamOperation {
     
-    private var fileHandle: NSFileHandle?
-    var fileURL: NSURL?
+    private var fileHandle: FileHandle?
+    var fileURL: URL?
+    var progressHandler: DownloadProgressHandler?
     
     override func start() {
-        let filePath = (NSTemporaryDirectory() as NSString).stringByAppendingPathComponent(NSUUID().UUIDString)
-        fileURL = NSURL(fileURLWithPath: filePath)
-        guard let fileURL = fileURL else {
-            error = NSError(domain: "streamEventError", code: 1, userInfo: nil)
-            finishOperation()
-            return
-        }
+        let filePath = (NSTemporaryDirectory() as NSString).appendingPathComponent(path ?? UUID().uuidString)
+        self.fileURL = URL(fileURLWithPath: filePath)
         do {
-            try NSData().writeToURL(fileURL, options: NSDataWritingOptions.DataWritingAtomic)
-            fileHandle = try NSFileHandle(forWritingToURL: fileURL)
-            startOperationWithStream(readStream)
+            try Data().write(to: self.fileURL!, options: NSData.WritingOptions.atomic)
+            self.fileHandle = try FileHandle(forWritingTo: self.fileURL!)
+            self.startOperationWithStream(self.readStream)
         } catch let error as NSError {
             self.error = error
-            fileHandle = nil
-            finishOperation()
+            self.finishOperation()
         }
     }
-
-    override func streamEventEnd(aStream: NSStream) -> (Bool, NSError?) {
-        fileHandle?.closeFile()
+    
+    override func streamEventEnd(_ aStream: Stream) -> (Bool, NSError?) {
+        self.fileHandle?.closeFile()
         return (true, nil)
     }
     
-    override func streamEventError(aStream: NSStream) {
-        fileHandle?.closeFile()
-        if let fileURL = fileURL {
+    override func streamEventError(_ aStream: Stream) {
+        super.streamEventError(aStream)
+        self.fileHandle?.closeFile()
+        if self.fileURL != nil {
             do {
-                try NSFileManager.defaultManager().removeItemAtURL(fileURL)
+                try FileManager.default.removeItem(at: self.fileURL!)
             } catch _ {
             }
         }
-        error = NSError(domain: "streamEventError", code: 0, userInfo: nil)
-        fileURL = nil
+        self.fileURL = nil
     }
     
-    override func streamEventHasBytes(aStream: NSStream) -> (Bool, NSError?) {
-        var parsedBytes: Int = 0
-        repeat {
-            parsedBytes = 0
-            if let inputStream = aStream as? NSInputStream {
-                if inputStream.hasBytesAvailable && inputStream.streamStatus == NSStreamStatus.Open && inputStream.streamError == nil {
-                    parsedBytes = inputStream.read(temporaryBuffer, maxLength: 1024)
-                }
-                if parsedBytes > 0 {
+    override func streamEventHasBytes(_ aStream: Stream) -> (Bool, NSError?) {
+        let totalBytesSize = aStream.property(forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPResourceSize as String)) as! Int
+        var downloadedBytes: Int = 0
+        
+        if let inputStream = aStream as? InputStream {
+            var parsetBytes: Int = 0
+            repeat {
+                parsetBytes = inputStream.read(self.temporaryBuffer, maxLength: 65536)
+                downloadedBytes += parsetBytes
+                progressHandler?(Float(downloadedBytes) / Float(totalBytesSize))
+                if parsetBytes > 0 {
                     autoreleasepool {
-                        let data = NSData(bytes: temporaryBuffer, length: parsedBytes)
-                        fileHandle?.writeData(data)
+                        let data = Data(bytes: UnsafePointer<UInt8>(self.temporaryBuffer), count: parsetBytes)
+                        self.fileHandle!.write(data)
                     }
                 }
-            }
-        } while (parsedBytes > 0)
-        
+            } while (parsetBytes > 0)
+        }
         return (true, nil)
     }
 }
+

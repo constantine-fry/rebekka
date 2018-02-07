@@ -9,39 +9,40 @@
 import Foundation
 
 internal enum OperationState {
-    case None
-    case Ready
-    case Executing
-    case Finished
+    case none
+    case ready
+    case executing
+    case finished
 }
 
 /** The base class for FTP operations used in framework. */
-internal class Operation: NSOperation {
-
+internal class Operation: Foundation.Operation {
+    
     var error: NSError?
     
     internal let configuration: SessionConfiguration
     
-    internal var state = OperationState.Ready {
+    internal var state = OperationState.ready {
         willSet {
-            willChangeValueForKey("isReady")
-            willChangeValueForKey("isExecuting")
-            willChangeValueForKey("isFinished")
+            self.willChangeValue(forKey: "isReady")
+            self.willChangeValue(forKey: "isExecuting")
+            self.willChangeValue(forKey: "isFinished")
         }
         didSet {
-            didChangeValueForKey("isReady")
-            didChangeValueForKey("isExecuting")
-            didChangeValueForKey("isFinished")
+            self.didChangeValue(forKey: "isReady")
+            self.didChangeValue(forKey: "isExecuting")
+            self.didChangeValue(forKey: "isFinished")
         }
     }
     
-    override var asynchronous: Bool { get { return true } }
+    override var isAsynchronous: Bool { get { return true } }
     
-    override var ready: Bool { get { return state == .Ready } }
-    override var executing: Bool { get { return state == .Executing } }
-    override var finished: Bool { get { return state == .Finished } }
+    override var isReady: Bool { get { return self.state == .ready } }
+    override var isExecuting: Bool { get { return self.state == .executing } }
+    override var isFinished: Bool { get { return self.state == .finished } }
     
     init(configuration: SessionConfiguration) {
         self.configuration = configuration
     }
 }
+
