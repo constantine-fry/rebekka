@@ -12,16 +12,16 @@ import Foundation
 internal class ReadStreamOperation: StreamOperation {
     
     internal lazy var temporaryBuffer: UnsafeMutablePointer<UInt8> = {
-        return UnsafeMutablePointer<UInt8>.alloc(1024)
+        return UnsafeMutablePointer<UInt8>.allocate(capacity: 65536)
     }()
     
-    lazy var readStream: NSInputStream = {
-        let cfStream = CFReadStreamCreateWithFTPURL(nil, self.fullURL())
+    lazy var readStream: InputStream = {
+        let cfStream = CFReadStreamCreateWithFTPURL(nil, fullUrl as CFURL)
         CFReadStreamSetDispatchQueue(cfStream.takeUnretainedValue(), self.queue)
         return cfStream.takeRetainedValue()
     }()
     
     override func start() {
-        self.startOperationWithStream(self.readStream)
+        startOperationWithStream(readStream)
     }
 }

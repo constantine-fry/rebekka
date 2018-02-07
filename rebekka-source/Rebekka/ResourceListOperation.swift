@@ -10,66 +10,71 @@ import Foundation
 
 /* Resource type, values defined in `sys/dirent.h`. */
 public enum ResourceType: String {
-    case Unknown        = "Unknown"        // DT_UNKNOWN
-    case Directory      = "Directory"      // DT_DIR
-    case RegularFile    = "RegularFile"    // DT_REG
-    case SymbolicLink   = "SymbolicLink"   // DT_LNK
+    case unknown        = "Unknown"        // DT_UNKNOWN
+    case directory      = "Directory"      // DT_DIR
+    case regularFile    = "RegularFile"    // DT_REG
+    case symbolicLink   = "SymbolicLink"   // DT_LNK
+    case namedPipe          = "NamedPipe"          // DT_FIFO
+    case characterDevice    = "CharacterDevice"    // DT_CHR
+    case blockDevice        = "BlockDevice"        // DT_BLK
+    case localDomainSocket  = "LocalDomainSocket"  // DT_SOCK
+    case whiteout           = "Whiteout"           // DT_WHT
     
-    case NamedPipe          = "NamedPipe"          // DT_FIFO
-    case CharacterDevice    = "CharacterDevice"    // DT_CHR
-    case BlockDevice        = "BlockDevice"        // DT_BLK
-    case LocalDomainSocket  = "LocalDomainSocket"  // DT_SOCK
-    case Whiteout           = "Whiteout"           // DT_WHT
-}
-
-public class ResourceItem: CustomStringConvertible {
-    public var type: ResourceType = .Unknown
-    public var name: String = ""
-    public var link: String = ""
-    public var date: NSDate = NSDate()
-    public var size: Int = 0
-    public var mode: Int = 0
-    public var owner: String = ""
-    public var group: String = ""
-    public var path: String = "/"
-    
-    public var description: String {
-        get {
-            return "\nResourceItem: \(name), \(type.rawValue)"
+    static func create(with fileType: Int) -> ResourceType? {
+        switch fileType {
+        case Int(DT_UNKNOWN): return .unknown
+        case Int(DT_FIFO): return .namedPipe
+        case Int(DT_SOCK): return .localDomainSocket
+        case Int(DT_CHR): return .characterDevice
+        case Int(DT_DIR): return .directory
+        case Int(DT_BLK): return .blockDevice
+        case Int(DT_REG): return .regularFile
+        case Int(DT_LNK): return .symbolicLink
+        case Int(DT_WHT): return .whiteout
+        default:
+            return nil
         }
     }
 }
 
-
-private let _resourceTypeMap: [Int:ResourceType] = [
-    Int(DT_UNKNOWN): ResourceType.Unknown,
-    Int(DT_FIFO):    ResourceType.NamedPipe,
-    Int(DT_SOCK):    ResourceType.LocalDomainSocket,
-    Int(DT_CHR): ResourceType.CharacterDevice,
-    Int(DT_DIR): ResourceType.Directory,
-    Int(DT_BLK): ResourceType.BlockDevice,
-    Int(DT_REG): ResourceType.RegularFile,
-    Int(DT_LNK): ResourceType.SymbolicLink,
-    Int(DT_WHT): ResourceType.Whiteout
-]
+open class ResourceItem: CustomStringConvertible {
+    open var type: ResourceType = .unknown
+    open var name: String = ""
+    open var link: String = ""
+    open var date: Date = Date()
+    open var size: Int = 0
+    open var mode: Int = 0
+    open var owner: String = ""
+    open var group: String = ""
+    open var path: String = "/"
+    
+    open var description: String {
+        return "\nResourceItem: \(name), \(type.rawValue)"
+    }
+}
 
 /** Operation for resource listing. */
 internal class ResourceListOperation: ReadStreamOperation {
     
-    private var inputData: NSMutableData?
+    fileprivate var inputData: NSMutableData?
     var resources: [ResourceItem]?
     
-    override func streamEventEnd(aStream: NSStream) -> (Bool, NSError?) {
+    override func streamEventEnd(_ aStream: Stream) -> (Bool, NSError?) {
+        guard let inputData = inputData else {
+            print("ERROR in ResourceListOperation.streamEventEnd: inputData was null")
+            return (true, nil)
+        }
+
         var offset = 0
-        let bytes = UnsafePointer<UInt8>(self.inputData!.bytes)
+        let bytes = inputData.bytes.bindMemory(to: UInt8.self, capacity: inputData.length)
         let totalBytes = CFIndex(self.inputData!.length)
         var parsedBytes = CFIndex(0)
-        let entity = UnsafeMutablePointer<Unmanaged<CFDictionary>?>.alloc(1)
+        let entity = UnsafeMutablePointer<Unmanaged<CFDictionary>?>.allocate(capacity: 1)
         var resources = [ResourceItem]()
         repeat {
-            parsedBytes = CFFTPCreateParsedResourceListing(nil, bytes.advancedBy(offset), totalBytes - offset, entity)
+            parsedBytes = CFFTPCreateParsedResourceListing(nil, bytes.advanced(by: offset), totalBytes - offset, entity)
             if parsedBytes > 0 {
-                let value = entity.memory?.takeUnretainedValue()
+                let value = entity.pointee?.takeUnretainedValue()
                 if let fptResource = value {
                     resources.append(self.mapFTPResources(fptResource))
                 }
@@ -77,11 +82,11 @@ internal class ResourceListOperation: ReadStreamOperation {
             }
         } while parsedBytes > 0
         self.resources = resources
-        entity.destroy()
+        entity.deinitialize()
         return (true, nil)
     }
     
-    private func mapFTPResources(ftpResources: NSDictionary) -> ResourceItem {
+    fileprivate func mapFTPResources(_ ftpResources: NSDictionary) -> ResourceItem {
         let item = ResourceItem()
         if let mode = ftpResources[kCFFTPResourceMode as String] as? Int {
             item.mode = mode
@@ -90,14 +95,14 @@ internal class ResourceListOperation: ReadStreamOperation {
             // CFFTPCreateParsedResourceListing assumes that teh names are in MacRoman.
             // To fix it we create data from string and read it with correct encoding.
             // https://devforums.apple.com/message/155626#155626
-            if configuration.encoding == NSMacOSRomanStringEncoding {
+            if configuration.encoding == String.Encoding.macOSRoman {
                 item.name = name
-            } else if let nameData = name.dataUsingEncoding(NSMacOSRomanStringEncoding) {
-                if let encodedName = NSString(data: nameData, encoding: self.configuration.encoding) {
+            } else if let nameData = name.data(using: String.Encoding.macOSRoman) {
+                if let encodedName = NSString(data: nameData, encoding: self.configuration.encoding.rawValue) {
                     item.name = encodedName as String
                 }
             }
-            item.path = self.path!.stringByAppendingString(item.name)
+            item.path = self.path! + item.name
         }
         if let owner = ftpResources[kCFFTPResourceOwner as String] as? String {
             item.owner = owner
@@ -112,30 +117,29 @@ internal class ResourceListOperation: ReadStreamOperation {
             item.size = size
         }
         if let type = ftpResources[kCFFTPResourceType as String] as? Int {
-            if let resourceType = _resourceTypeMap[type] {
+            if let resourceType = ResourceType.create(with: type) {
                 item.type = resourceType
             }
         }
-        if let date = ftpResources[kCFFTPResourceModDate as String] as? NSDate {
+        if let date = ftpResources[kCFFTPResourceModDate as String] as? Date {
             item.date = date
         }
         return item
     }
     
-    override func streamEventHasBytes(aStream: NSStream) -> (Bool, NSError?) {
-        if let inputStream = aStream as? NSInputStream {
-            let buffer = UnsafeMutablePointer<UInt8>.alloc(1024)
+    override func streamEventHasBytes(_ aStream: Stream) -> (Bool, NSError?) {
+        if let inputStream = aStream as? InputStream {
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1024)
             let result = inputStream.read(buffer, maxLength: 1024)
             if result > 0 {
                 if self.inputData == nil {
                     self.inputData = NSMutableData(bytes: buffer, length: result)
                 } else {
-                    self.inputData!.appendBytes(buffer, length: result)
+                    self.inputData!.append(buffer, length: result)
                 }
             }
-            buffer.destroy()
+            buffer.deinitialize()
         }
         return (true, nil)
     }
-    
 }

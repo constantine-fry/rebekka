@@ -10,40 +10,43 @@ import Foundation
 
 /** Operation for file uploading. */
 internal class FileUploadOperation: WriteStreamOperation {
-    private var fileHandle: NSFileHandle?
-    var fileURL: NSURL!
+    fileprivate var fileHandle: FileHandle?
+    var fileURL: URL!
     
     override func start() {
         do {
-            self.fileHandle = try NSFileHandle(forReadingFromURL: fileURL)
-            self.startOperationWithStream(self.writeStream)
+            fileHandle = try FileHandle(forReadingFrom: fileURL)
+            startOperationWithStream(self.writeStream)
         } catch let error as NSError {
             self.error = error
-            self.fileHandle = nil
-            self.finishOperation()
+            fileHandle = nil
+            finishOperation()
         }
     }
     
-    override func streamEventEnd(aStream: NSStream) -> (Bool, NSError?) {
-        self.fileHandle?.closeFile()
+    override func streamEventEnd(_ aStream: Stream) -> (Bool, NSError?) {
+        fileHandle?.closeFile()
         return (true, nil)
     }
     
-    override func streamEventError(aStream: NSStream) {
+    override func streamEventError(_ aStream: Stream) {
         super.streamEventError(aStream)
-        self.fileHandle?.closeFile()
+        fileHandle?.closeFile()
     }
     
-    override func streamEventHasSpace(aStream: NSStream) -> (Bool, NSError?) {
-        if let writeStream = aStream as? NSOutputStream {
-            let offsetInFile = self.fileHandle!.offsetInFile
-            let data = self.fileHandle!.readDataOfLength(1024)
-            let writtenBytes = writeStream.write(UnsafePointer<UInt8>(data.bytes), maxLength: data.length)
-            if writtenBytes > 0 {
-                self.fileHandle?.seekToFileOffset(offsetInFile + UInt64(writtenBytes))
-            } else if writtenBytes == -1 {
-                self.finishOperation()
-            }
+    override func streamEventHasSpace(_ aStream: Stream) -> (Bool, NSError?) {
+        guard let fileHandle = fileHandle,
+            let writeStream = aStream as? OutputStream else {
+                return (true, nil)
+        }
+        let offsetInFile = fileHandle.offsetInFile
+        let data = fileHandle.readData(ofLength: 1024)
+        let bytesToWrite = (data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count)
+        let writtenBytes = writeStream.write(bytesToWrite, maxLength: data.count)
+        if writtenBytes > 0 {
+            self.fileHandle?.seek(toFileOffset: offsetInFile + UInt64(writtenBytes))
+        } else if writtenBytes == -1 {
+            self.finishOperation()
         }
         return (true, nil)
     }
