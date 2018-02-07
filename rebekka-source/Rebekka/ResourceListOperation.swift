@@ -10,20 +10,35 @@ import Foundation
 
 /* Resource type, values defined in `sys/dirent.h`. */
 public enum ResourceType: String {
-    case Unknown        // DT_UNKNOWN
-    case Directory      // DT_DIR
-    case RegularFile    // DT_REG
-    case SymbolicLink   // DT_LNK
+    case unknown        = "Unknown"        // DT_UNKNOWN
+    case directory      = "Directory"      // DT_DIR
+    case regularFile    = "RegularFile"    // DT_REG
+    case symbolicLink   = "SymbolicLink"   // DT_LNK
+    case namedPipe          = "NamedPipe"          // DT_FIFO
+    case characterDevice    = "CharacterDevice"    // DT_CHR
+    case blockDevice        = "BlockDevice"        // DT_BLK
+    case localDomainSocket  = "LocalDomainSocket"  // DT_SOCK
+    case whiteout           = "Whiteout"           // DT_WHT
     
-    case NamedPipe          // DT_FIFO
-    case CharacterDevice    // DT_CHR
-    case BlockDevice        // DT_BLK
-    case LocalDomainSocket  // DT_SOCK
-    case Whiteout           // DT_WHT
+    static func create(with fileType: Int) -> ResourceType? {
+        switch fileType {
+        case Int(DT_UNKNOWN): return .unknown
+        case Int(DT_FIFO): return .namedPipe
+        case Int(DT_SOCK): return .localDomainSocket
+        case Int(DT_CHR): return .characterDevice
+        case Int(DT_DIR): return .directory
+        case Int(DT_BLK): return .blockDevice
+        case Int(DT_REG): return .regularFile
+        case Int(DT_LNK): return .symbolicLink
+        case Int(DT_WHT): return .whiteout
+        default:
+            return nil
+        }
+    }
 }
 
 open class ResourceItem: CustomStringConvertible {
-    open var type: ResourceType = .Unknown
+    open var type: ResourceType = .unknown
     open var name: String = ""
     open var link: String = ""
     open var date: Date = Date()
@@ -37,19 +52,6 @@ open class ResourceItem: CustomStringConvertible {
         return "\nResourceItem: \(name), \(type.rawValue)"
     }
 }
-
-
-private let _resourceTypeMap: [Int:ResourceType] = [
-    Int(DT_UNKNOWN): .Unknown,
-    Int(DT_FIFO): .NamedPipe,
-    Int(DT_SOCK): ResourceType.LocalDomainSocket,
-    Int(DT_CHR): ResourceType.CharacterDevice,
-    Int(DT_DIR): ResourceType.Directory,
-    Int(DT_BLK): ResourceType.BlockDevice,
-    Int(DT_REG): ResourceType.RegularFile,
-    Int(DT_LNK): ResourceType.SymbolicLink,
-    Int(DT_WHT): ResourceType.Whiteout
-]
 
 /** Operation for resource listing. */
 internal class ResourceListOperation: ReadStreamOperation {
@@ -115,7 +117,7 @@ internal class ResourceListOperation: ReadStreamOperation {
             item.size = size
         }
         if let type = ftpResources[kCFFTPResourceType as String] as? Int {
-            if let resourceType = _resourceTypeMap[type] {
+            if let resourceType = ResourceType.create(with: type) {
                 item.type = resourceType
             }
         }
@@ -140,6 +142,4 @@ internal class ResourceListOperation: ReadStreamOperation {
         }
         return (true, nil)
     }
-    
 }
-

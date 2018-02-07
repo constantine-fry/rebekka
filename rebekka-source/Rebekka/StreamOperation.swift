@@ -94,4 +94,3 @@ internal class StreamOperation: Operation, StreamDelegate {
         error = aStream.streamError as NSError?
     }
 }
-

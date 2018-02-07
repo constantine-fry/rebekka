@@ -43,27 +43,26 @@ internal class FileDownloadOperation: ReadStreamOperation {
             }
         }
         self.fileURL = nil
-    }
+    } 
     
     override func streamEventHasBytes(_ aStream: Stream) -> (Bool, NSError?) {
-        let totalBytesSize = aStream.property(forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPResourceSize as String)) as? Int ?? 0
-        var downloadedBytes: Int = 0
-        
-        if let inputStream = aStream as? InputStream {
-            var parsetBytes: Int = 0
-            repeat {
-                parsetBytes = inputStream.read(self.temporaryBuffer, maxLength: 65536)
-                downloadedBytes += parsetBytes
-                progressHandler?(Float(downloadedBytes) / Float(totalBytesSize))
-                if parsetBytes > 0 {
-                    autoreleasepool {
-                        let data = Data(bytes: UnsafePointer<UInt8>(self.temporaryBuffer), count: parsetBytes)
-                        self.fileHandle!.write(data)
-                    }
-                }
-            } while (parsetBytes > 0)
+        guard let totalBytesSize = aStream.property(forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPResourceSize as String)) as? Int,
+            let inputStream = aStream as? InputStream else {
+                return (true, nil)
         }
+        var downloadedBytes: Int = 0
+        var parsetBytes: Int = 0
+        repeat {
+            parsetBytes = inputStream.read(self.temporaryBuffer, maxLength: 65536)
+            downloadedBytes += parsetBytes
+            progressHandler?(Float(downloadedBytes) / Float(totalBytesSize))
+            if parsetBytes > 0 {
+                autoreleasepool {
+                    let data = Data(bytes: UnsafePointer<UInt8>(self.temporaryBuffer), count: parsetBytes)
+                    self.fileHandle!.write(data)
+                }
+            }
+        } while (parsetBytes > 0)
         return (true, nil)
     }
 }
-

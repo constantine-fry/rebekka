@@ -13,7 +13,6 @@ public typealias FileURLResultCompletionHandler = (URL?, NSError?) -> Void
 public typealias BooleanResultCompletionHandler = (Bool, NSError?) -> Void
 public typealias DownloadProgressHandler = (Float) -> Void
 
-
 /** The FTP session. */
 open class Session {
     /** The serial private operation queue. */
