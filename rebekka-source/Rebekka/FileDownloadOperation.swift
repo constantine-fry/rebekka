@@ -20,25 +20,25 @@ internal class FileDownloadOperation: ReadStreamOperation {
         self.fileURL = URL(fileURLWithPath: filePath)
         do {
             try Data().write(to: self.fileURL!, options: NSData.WritingOptions.atomic)
-            self.fileHandle = try FileHandle(forWritingTo: self.fileURL!)
-            self.startOperationWithStream(self.readStream)
+            fileHandle = try FileHandle(forWritingTo: self.fileURL!)
+            startOperationWithStream(self.readStream)
         } catch let error as NSError {
             self.error = error
-            self.finishOperation()
+            finishOperation()
         }
     }
     
     override func streamEventEnd(_ aStream: Stream) -> (Bool, NSError?) {
-        self.fileHandle?.closeFile()
+        fileHandle?.closeFile()
         return (true, nil)
     }
     
     override func streamEventError(_ aStream: Stream) {
         super.streamEventError(aStream)
-        self.fileHandle?.closeFile()
-        if self.fileURL != nil {
+        fileHandle?.closeFile()
+        if let fileURL = self.fileURL {
             do {
-                try FileManager.default.removeItem(at: self.fileURL!)
+                try FileManager.default.removeItem(at: fileURL)
             } catch _ {
             }
         }
@@ -46,7 +46,7 @@ internal class FileDownloadOperation: ReadStreamOperation {
     }
     
     override func streamEventHasBytes(_ aStream: Stream) -> (Bool, NSError?) {
-        let totalBytesSize = aStream.property(forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPResourceSize as String)) as! Int
+        let totalBytesSize = aStream.property(forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPResourceSize as String)) as? Int ?? 0
         var downloadedBytes: Int = 0
         
         if let inputStream = aStream as? InputStream {

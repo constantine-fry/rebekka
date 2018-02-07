@@ -10,16 +10,16 @@ import Foundation
 
 /* Resource type, values defined in `sys/dirent.h`. */
 public enum ResourceType: String {
-    case Unknown        = "Unknown"        // DT_UNKNOWN
-    case Directory      = "Directory"      // DT_DIR
-    case RegularFile    = "RegularFile"    // DT_REG
-    case SymbolicLink   = "SymbolicLink"   // DT_LNK
+    case Unknown        // DT_UNKNOWN
+    case Directory      // DT_DIR
+    case RegularFile    // DT_REG
+    case SymbolicLink   // DT_LNK
     
-    case NamedPipe          = "NamedPipe"          // DT_FIFO
-    case CharacterDevice    = "CharacterDevice"    // DT_CHR
-    case BlockDevice        = "BlockDevice"        // DT_BLK
-    case LocalDomainSocket  = "LocalDomainSocket"  // DT_SOCK
-    case Whiteout           = "Whiteout"           // DT_WHT
+    case NamedPipe          // DT_FIFO
+    case CharacterDevice    // DT_CHR
+    case BlockDevice        // DT_BLK
+    case LocalDomainSocket  // DT_SOCK
+    case Whiteout           // DT_WHT
 }
 
 open class ResourceItem: CustomStringConvertible {
@@ -34,9 +34,7 @@ open class ResourceItem: CustomStringConvertible {
     open var path: String = "/"
     
     open var description: String {
-        get {
-            return "\nResourceItem: \(name), \(type.rawValue)"
-        }
+        return "\nResourceItem: \(name), \(type.rawValue)"
     }
 }
 
@@ -60,8 +58,13 @@ internal class ResourceListOperation: ReadStreamOperation {
     var resources: [ResourceItem]?
     
     override func streamEventEnd(_ aStream: Stream) -> (Bool, NSError?) {
+        guard let inputData = inputData else {
+            print("ERROR in ResourceListOperation.streamEventEnd: inputData was null")
+            return (true, nil)
+        }
+
         var offset = 0
-        let bytes = self.inputData!.bytes.bindMemory(to: UInt8.self, capacity: (self.inputData?.length)!)
+        let bytes = inputData.bytes.bindMemory(to: UInt8.self, capacity: inputData.length)
         let totalBytes = CFIndex(self.inputData!.length)
         var parsedBytes = CFIndex(0)
         let entity = UnsafeMutablePointer<Unmanaged<CFDictionary>?>.allocate(capacity: 1)

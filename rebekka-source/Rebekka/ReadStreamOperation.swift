@@ -16,7 +16,7 @@ internal class ReadStreamOperation: StreamOperation {
     }()
     
     lazy var readStream: InputStream = {
-        let cfStream = CFReadStreamCreateWithFTPURL(nil, self.fullURL() as CFURL)
+        let cfStream = CFReadStreamCreateWithFTPURL(nil, fullURL as CFURL)
         CFReadStreamSetDispatchQueue(cfStream.takeUnretainedValue(), self.queue)
         return cfStream.takeRetainedValue()
     }()
@@ -25,4 +25,3 @@ internal class ReadStreamOperation: StreamOperation {
         startOperationWithStream(readStream)
     }
 }
-

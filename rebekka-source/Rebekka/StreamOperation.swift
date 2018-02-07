@@ -12,8 +12,7 @@ import Foundation
 internal class StreamOperation: Operation, StreamDelegate {
     var path: String?
     internal let queue: DispatchQueue
-    
-    fileprivate var currentStream: Stream?
+    private var currentStream: Stream?
     
     init(configuration: SessionConfiguration, queue: DispatchQueue) {
         self.queue = queue
@@ -21,19 +20,19 @@ internal class StreamOperation: Operation, StreamDelegate {
     }
     
     fileprivate func configureStream(_ stream: Stream) {
-        stream.setProperty(true, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyShouldCloseNativeSocket as String as String))
-        stream.setProperty(true, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPFetchResourceInfo as String as String))
-        stream.setProperty(self.configuration.passive, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPUsePassiveMode as String as String))
-        stream.setProperty(self.configuration.username, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPUserName as String as String))
-        stream.setProperty(self.configuration.password, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPPassword as String as String))
+        stream.setProperty(true, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyShouldCloseNativeSocket as String))
+        stream.setProperty(true, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPFetchResourceInfo as String))
+        stream.setProperty(configuration.passive, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPUsePassiveMode as String))
+        stream.setProperty(configuration.username, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPUserName as String))
+        stream.setProperty(configuration.password, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertyFTPPassword as String))
         stream.delegate = self
     }
     
-    func fullURL() -> URL {
-        if self.path != nil {
-            return self.configuration.URL().appendingPathComponent(path!)
+    var fullURL: URL {
+        guard let path = self.path else {
+            return configuration.URL() as URL
         }
-        return self.configuration.URL() as URL
+        return configuration.URL().appendingPathComponent(path)
     }
     
     @objc func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
@@ -46,17 +45,17 @@ internal class StreamOperation: Operation, StreamDelegate {
         
         switch eventCode {
         case Stream.Event.openCompleted:
-            let _ = self.streamEventOpenComleted(aStream)
+            streamEventOpenComleted(aStream)
         case Stream.Event.hasBytesAvailable:
-            let _ = self.streamEventHasBytes(aStream)
+            streamEventHasBytes(aStream)
         case Stream.Event.hasSpaceAvailable:
-            let _ = self.streamEventHasSpace(aStream)
+            streamEventHasSpace(aStream)
         case Stream.Event.errorOccurred:
-            self.streamEventError(aStream)
-            self.finishOperation()
+            streamEventError(aStream)
+            finishOperation()
         case Stream.Event.endEncountered:
-            let _ = self.streamEventEnd(aStream)
-            self.finishOperation()
+            streamEventEnd(aStream)
+            finishOperation()
         default:
             print("Unkonwn NSStreamEvent: \(eventCode)")
         }
@@ -75,24 +74,24 @@ internal class StreamOperation: Operation, StreamDelegate {
         self.state = .finished
     }
     
-    func streamEventOpenComleted(_ aStream: Stream) -> (Bool, NSError?) {
+    @discardableResult func streamEventOpenComleted(_ aStream: Stream) -> (Bool, NSError?) {
         return (true, nil)
     }
     
-    func streamEventEnd(_ aStream: Stream) -> (Bool, NSError?) {
+    @discardableResult func streamEventEnd(_ aStream: Stream) -> (Bool, NSError?) {
         return (true, nil)
     }
     
-    func streamEventHasBytes(_ aStream: Stream) -> (Bool, NSError?) {
+    @discardableResult func streamEventHasBytes(_ aStream: Stream) -> (Bool, NSError?) {
         return (true, nil)
     }
     
-    func streamEventHasSpace(_ aStream: Stream) -> (Bool, NSError?) {
+    @discardableResult func streamEventHasSpace(_ aStream: Stream) -> (Bool, NSError?) {
         return (true, nil)
     }
     
     func streamEventError(_ aStream: Stream) {
-        self.error = aStream.streamError as NSError?
+        error = aStream.streamError as NSError?
     }
 }
 

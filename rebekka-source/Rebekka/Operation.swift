@@ -24,25 +24,23 @@ internal class Operation: Foundation.Operation {
     
     internal var state = OperationState.ready {
         willSet {
-            self.willChangeValue(forKey: "isReady")
-            self.willChangeValue(forKey: "isExecuting")
-            self.willChangeValue(forKey: "isFinished")
+            willChangeValue(forKey: "isReady")
+            willChangeValue(forKey: "isExecuting")
+            willChangeValue(forKey: "isFinished")
         }
         didSet {
-            self.didChangeValue(forKey: "isReady")
-            self.didChangeValue(forKey: "isExecuting")
-            self.didChangeValue(forKey: "isFinished")
+            didChangeValue(forKey: "isReady")
+            didChangeValue(forKey: "isExecuting")
+            didChangeValue(forKey: "isFinished")
         }
     }
     
-    override var isAsynchronous: Bool { get { return true } }
-    
-    override var isReady: Bool { get { return self.state == .ready } }
-    override var isExecuting: Bool { get { return self.state == .executing } }
-    override var isFinished: Bool { get { return self.state == .finished } }
+    override var isAsynchronous: Bool { return true }
+    override var isReady: Bool { return state == .ready }
+    override var isExecuting: Bool { return state == .executing }
+    override var isFinished: Bool { return state == .finished }
     
     init(configuration: SessionConfiguration) {
         self.configuration = configuration
     }
 }
-

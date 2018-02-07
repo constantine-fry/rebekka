@@ -30,10 +30,10 @@ open class Session {
     
     public init(configuration: SessionConfiguration,
                 completionHandlerQueue: OperationQueue = OperationQueue.main) {
-        self.operationQueue = OperationQueue()
-        self.operationQueue.maxConcurrentOperationCount = 1
-        self.operationQueue.name = "net.ftp.rebekka.operations.queue"
-        self.streamQueue = DispatchQueue(label: "net.ftp.rebekka.cfstream.queue", attributes: [])
+        operationQueue = OperationQueue()
+        operationQueue.maxConcurrentOperationCount = 1
+        operationQueue.name = "net.ftp.rebekka.operations.queue"
+        streamQueue = DispatchQueue(label: "net.ftp.rebekka.cfstream.queue", attributes: [])
         self.completionHandlerQueue = completionHandlerQueue
         self.configuration = configuration
     }
@@ -77,14 +77,16 @@ open class Session {
     /**
      Downloads file at path from FTP server.
      File is stored in /tmp directory. Caller is responsible for deleting this file. */
-    open func download(_ path: String, progressHandler: @escaping DownloadProgressHandler, completionHandler: @escaping FileURLResultCompletionHandler) {
-        let operation = FileDownloadOperation(configuration: configuration, queue: self.streamQueue)
+    open func download(_ path: String,
+                       progressHandler: DownloadProgressHandler? = nil,
+                       completionHandler: FileURLResultCompletionHandler? = nil) {
+        let operation = FileDownloadOperation(configuration: configuration, queue: streamQueue)
         operation.progressHandler = progressHandler
         operation.completionBlock = {
             [weak operation] in
             if let strongOperation = operation {
                 self.completionHandlerQueue.addOperation {
-                    completionHandler(strongOperation.fileURL, strongOperation.error)
+                    completionHandler?(strongOperation.fileURL, strongOperation.error)
                 }
             }
         }
@@ -93,19 +95,19 @@ open class Session {
     }
     
     /** Uploads file from fileURL at path. */
-    open func upload(_ fileURL: URL, path: String, completionHandler: @escaping BooleanResultCompletionHandler) {
-        let operation = FileUploadOperation(configuration: configuration, queue: self.streamQueue)
+    open func upload(_ fileURL: URL, path: String, completionHandler: BooleanResultCompletionHandler? = nil) {
+        let operation = FileUploadOperation(configuration: configuration, queue: streamQueue)
         operation.completionBlock = {
             [weak operation] in
             if let strongOperation = operation {
                 self.completionHandlerQueue.addOperation {
-                    completionHandler(strongOperation.error == nil, strongOperation.error)
+                    completionHandler?(strongOperation.error == nil, strongOperation.error)
                 }
             }
         }
         operation.path = path
         operation.fileURL = fileURL
-        self.operationQueue.addOperation(operation)
+        operationQueue.addOperation(operation)
     }
 }
 
