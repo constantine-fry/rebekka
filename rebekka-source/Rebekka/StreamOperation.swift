@@ -62,16 +62,20 @@ internal class StreamOperation: Operation, StreamDelegate {
     }
     
     func startOperationWithStream(_ aStream: Stream) {
-        self.currentStream = aStream
-        self.configureStream(self.currentStream!)
-        self.currentStream!.open()
-        self.state = .executing
+        synchronized(self) {
+            self.currentStream = aStream
+            self.configureStream(self.currentStream!)
+            self.currentStream!.open()
+            self.state = .executing
+        }
     }
     
     func finishOperation() {
-        self.currentStream?.close()
-        self.currentStream = nil
-        self.state = .finished
+        synchronized(self) {
+            self.currentStream?.close()
+            self.currentStream = nil
+            self.state = .finished
+        }
     }
     
     @discardableResult func streamEventOpenComleted(_ aStream: Stream) -> (Bool, NSError?) {
