@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     func application(_ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
             // Override point for customization after application launch.
             
             var configuration = SessionConfiguration()
@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func testList() {
         self.session.list("/") {
             (resources, error) -> Void in
-            print("List directory with result:\n\(resources), error: \(error)\n\n")
+            print("List directory with result:\n\(resources!), error: \(error!)\n\n")
         }
     }
     
@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let path = "/upload/\(UUID().uuidString).png"
             self.session.upload(URL, path: path) {
                 (result, error) -> Void in
-                print("Upload file with result:\n\(result), error: \(error)\n\n")
+                print("Upload file with result:\n\(result), error: \(error!)\n\n")
             }
         }
     }
@@ -53,7 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func testDownload() {
         self.session.download("/1MB.zip") {
             (fileURL, error) -> Void in
-            print("Download file with result:\n\(fileURL), error: \(error)\n\n")
+            print("Download file with result:\n\(fileURL!), error: \(error!)\n\n")
             if let fileURL = fileURL {
                 do {
                     try FileManager.default.removeItem(at: fileURL)
@@ -69,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let name = UUID().uuidString
         self.session.createDirectory("/upload/\(name)") {
             (result, error) -> Void in
-            print("Create directory with result:\n\(result), error: \(error)")
+            print("Create directory with result:\n\(result), error: \(error!)")
         }
     }
     
