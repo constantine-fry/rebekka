@@ -61,7 +61,7 @@ if let URL = NSBundle.mainBundle().URLForResource("testUpload", withExtension: "
 
 ###Requirements
 
-Swift 2.0 / iOS 8.0+ / Mac OS X 10.9+
+Swift 3.0 / iOS 8.0+ / Mac OS X 10.9+
 
 ###License
 
