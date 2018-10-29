@@ -98,7 +98,7 @@ open class Session {
             return
         }
         
-        let components = path.characters.split(separator: "/")
+        let components = path.split(separator: "/")
         let head = components.dropLast(1).map(String.init).joined(separator: "/")
         let directory = head + "/"
         

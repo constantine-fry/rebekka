@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    private func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
             
         var configuration = SessionConfiguration()
@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func testList() {
         self.session.list("/") {
             (resources, error) -> Void in
-            print("List directory with result:\n\(resources), error: \(error)\n\n")
+            print("List directory with result:\n\(String(describing: resources)), error: \(String(describing: error))\n\n")
         }
     }
     
@@ -74,7 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let name = UUID().uuidString
         self.session.createDirectory("/upload/\(name)") {
             (result, error) -> Void in
-            print("Create directory with result:\n\(result), error: \(error)")
+            print("Create directory with result:\n\(result), error: \(String(describing: error))")
         }
     }
     

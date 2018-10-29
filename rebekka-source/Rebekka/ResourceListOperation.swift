@@ -77,7 +77,7 @@ internal class ResourceListOperation: ReadStreamOperation {
             }
         } while parsedBytes > 0
         self.resources = resources
-        entity.deinitialize()
+        entity.deinitialize(count: 0)
         return (true, nil)
     }
     
@@ -133,7 +133,7 @@ internal class ResourceListOperation: ReadStreamOperation {
                     self.inputData!.append(buffer, length: result)
                 }
             }
-            buffer.deinitialize()
+            buffer.deinitialize(count: 0)
         }
         return (true, nil)
     }

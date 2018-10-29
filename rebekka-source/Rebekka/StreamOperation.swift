@@ -75,18 +75,22 @@ internal class StreamOperation: Operation, StreamDelegate {
         self.state = .finished
     }
     
+    @discardableResult
     func streamEventOpenComleted(_ aStream: Stream) -> (Bool, NSError?) {
         return (true, nil)
     }
     
+    @discardableResult
     func streamEventEnd(_ aStream: Stream) -> (Bool, NSError?) {
         return (true, nil)
     }
     
+    @discardableResult
     func streamEventHasBytes(_ aStream: Stream) -> (Bool, NSError?) {
         return (true, nil)
     }
     
+    @discardableResult
     func streamEventHasSpace(_ aStream: Stream) -> (Bool, NSError?) {
         return (true, nil)
     }
